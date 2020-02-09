@@ -46,27 +46,34 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Daniel的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。模型一| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      || ———– | ——">
+<meta property="og:type" content="article">
+<meta property="og:title" content="交叉熵损失函数">
+<meta property="og:url" content="http://yoursite.com/uncategorized/Cross%20Entropy">
 <meta property="og:site_name" content="Daniel的博客">
+<meta property="og:description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。模型一| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      || ———– | ——">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200209124130302.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200209131105300.png">
+<meta property="article:published_time" content="2020-02-09T15:37:13.000Z">
+<meta property="article:modified_time" content="2020-02-09T15:51:42.328Z">
 <meta property="article:author" content="DanielRX">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200209124130302.png">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/uncategorized/Cross%20Entropy">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>Daniel的博客</title>
+  <title>交叉熵损失函数 | Daniel的博客</title>
   
 
 
@@ -183,10 +190,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/uncategorized/Cross%20Entropy">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -200,8 +207,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/uncategorized/Cross%20Entropy" class="post-title-link" itemprop="url">交叉熵损失函数</a>
+          交叉熵损失函数
         </h1>
 
         <div class="post-meta">
@@ -215,7 +221,14 @@
               <time title="创建时间：2020-02-09 23:37:13 / 修改时间：23:51:42" itemprop="dateCreated datePublished" datetime="2020-02-09T23:37:13+08:00">2020-02-09</time>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
@@ -240,7 +253,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。</p>
+        <p>交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。</p>
 <h3 id="一、分类的损失函数"><a href="#一、分类的损失函数" class="headerlink" title="一、分类的损失函数"></a>一、分类的损失函数</h3><p>为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：<br>我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。<br><strong>模型一</strong><br>| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      |<br>| ———– | —— | —— | ——– | ——— |<br>| 猫(1 0 0)   | 0.8    | 0.1    | 0.1      | 猫(1 0 0) |<br>| 狗(0 1 0)   | 0.05   | 0.9    | 0.05     | 狗(0 1 0) |<br>| 兔子(0 0 1) | 0.4    | 0.3    | 0.3      | 猫(1 0 0) |<br><strong>模型二</strong><br>| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      |<br>| ———– | —— | —— | ——– | ——— |<br>| 猫(1 0 0)   | 0.6    | 0.2    | 0.2      | 猫(1 0 0) |<br>| 狗(0 1 0)   | 0.25   | 0.7    | 0.05     | 狗(0 1 0) |<br>| 兔子(0 0 1) | 0.8    | 0.15   | 0.05     | 猫(1 0 0) |<br>我们可以看到，尽管最后两个模型的输出完全一样，但从概率上看，模型一的表现要比模型二更好。</p>
 <h5 id="1-分类错误率"><a href="#1-分类错误率" class="headerlink" title="1.分类错误率"></a>1.分类错误率</h5><p>最朴素的一种定义方式，是直接计算分类错误的数量占总数量的百分比，即<br>$$Classification\ Error = \frac{number\ of\ error}{total\ number}$$</p>
 <p>上面两个模型的分类错误率都是$\frac{1}{3}$，这样的损失函数无法判断出哪个模型表现更加优异。</p>
@@ -266,24 +279,43 @@
 <p>&emsp;</p>
 <h3 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h3><p>[1]. <a href="https://zhuanlan.zhihu.com/p/35709485" target="_blank" rel="noopener">知乎专栏：损失函数 - 交叉熵损失函数</a><br>[2]. <a href="https://blog.csdn.net/tsyccnh/article/details/79163834" target="_blank" rel="noopener">一文搞懂交叉熵在机器学习中的应用，透彻理解交叉熵背后的直觉</a><br>[3]. <a href="https://blog.csdn.net/Gipsy_Danger/article/details/81292148" target="_blank" rel="noopener">Softmax和交叉熵的深度解析和Python实现</a><br>[4]. Stanford University CS230 - Deep Learning</p>
 
-      
     </div>
 
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>DanielRX
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/uncategorized/Cross%20Entropy" title="交叉熵损失函数">http://yoursite.com/uncategorized/Cross Entropy</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
   
 
   </div>
-
-  
-
 
 
           </div>
@@ -334,6 +366,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、分类的损失函数"><span class="nav-number">1.</span> <span class="nav-text">一、分类的损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-分类错误率"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.分类错误率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-均方误差"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 均方误差</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、交叉熵的推导"><span class="nav-number">2.</span> <span class="nav-text">二、交叉熵的推导</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-信息量"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. 信息量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-信息熵"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.信息熵</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-相对熵-KL散度"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. 相对熵&#x2F;KL散度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-交叉熵"><span class="nav-number">2.0.4.</span> <span class="nav-text">4. 交叉熵</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-交叉熵的计算"><span class="nav-number">2.0.5.</span> <span class="nav-text">5. 交叉熵的计算</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、反向传播"><span class="nav-number">3.</span> <span class="nav-text">三、反向传播</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-二分类"><span class="nav-number">3.0.1.</span> <span class="nav-text">1. 二分类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-多分类"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.多分类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、交叉熵的实现"><span class="nav-number">4.</span> <span class="nav-text">四、交叉熵的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、参考资料"><span class="nav-number">5.</span> <span class="nav-text">五、参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
