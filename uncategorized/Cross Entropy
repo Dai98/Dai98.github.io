@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
@@ -46,18 +46,19 @@
   };
 </script>
 
-  <meta name="description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。模型一| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      || ———– | ——">
+  <meta name="description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。 模型一     正确答案 猫概率 狗概率 兔子概率 预测     猫(1 0 0) 0.8 0.1 0.1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="交叉熵损失函数">
 <meta property="og:url" content="http://yoursite.com/uncategorized/Cross%20Entropy">
 <meta property="og:site_name" content="Daniel的博客">
-<meta property="og:description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。模型一| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      || ———– | ——">
+<meta property="og:description" content="交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。 一、分类的损失函数为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。 模型一     正确答案 猫概率 狗概率 兔子概率 预测     猫(1 0 0) 0.8 0.1 0.1">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200209124130302.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200209131105300.png">
 <meta property="article:published_time" content="2020-02-09T15:37:13.000Z">
-<meta property="article:modified_time" content="2020-02-09T16:26:16.267Z">
+<meta property="article:modified_time" content="2020-02-10T05:48:20.035Z">
 <meta property="article:author" content="DanielRX">
+<meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200209124130302.png">
 
@@ -102,12 +103,12 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,7 +225,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-10 00:26:16" itemprop="dateModified" datetime="2020-02-10T00:26:16+08:00">2020-02-10</time>
+                <time title="修改时间：2020-02-10 13:48:20" itemprop="dateModified" datetime="2020-02-10T13:48:20+08:00">2020-02-10</time>
               </span>
 
           
@@ -240,7 +241,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8.1k</span>
+              <span>7.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -260,25 +261,229 @@
 
       
         <p>交叉熵(Cross Entropy)是与均值误差(MSE)一样常用的损失函数，用在分类中。</p>
-<h3 id="一、分类的损失函数"><a href="#一、分类的损失函数" class="headerlink" title="一、分类的损失函数"></a>一、分类的损失函数</h3><p>为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：<br>我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。<br><strong>模型一</strong><br>| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      |<br>| ———– | —— | —— | ——– | ——— |<br>| 猫(1 0 0)   | 0.8    | 0.1    | 0.1      | 猫(1 0 0) |<br>| 狗(0 1 0)   | 0.05   | 0.9    | 0.05     | 狗(0 1 0) |<br>| 兔子(0 0 1) | 0.4    | 0.3    | 0.3      | 猫(1 0 0) |<br><strong>模型二</strong><br>| 正确答案    | 猫概率 | 狗概率 | 兔子概率 | 预测      |<br>| ———– | —— | —— | ——– | ——— |<br>| 猫(1 0 0)   | 0.6    | 0.2    | 0.2      | 猫(1 0 0) |<br>| 狗(0 1 0)   | 0.25   | 0.7    | 0.05     | 狗(0 1 0) |<br>| 兔子(0 0 1) | 0.8    | 0.15   | 0.05     | 猫(1 0 0) |<br>我们可以看到，尽管最后两个模型的输出完全一样，但从概率上看，模型一的表现要比模型二更好。</p>
-<h5 id="1-分类错误率"><a href="#1-分类错误率" class="headerlink" title="1.分类错误率"></a>1.分类错误率</h5><p>最朴素的一种定义方式，是直接计算分类错误的数量占总数量的百分比，即<br>$$Classification\ Error = \frac{number\ of\ error}{total\ number}$$</p>
-<p>上面两个模型的分类错误率都是$\frac{1}{3}$，这样的损失函数无法判断出哪个模型表现更加优异。</p>
-<h5 id="2-均方误差"><a href="#2-均方误差" class="headerlink" title="2. 均方误差"></a>2. 均方误差</h5><p>均方误差一般用于回归，然而它也能用在分类中，我们把每个类别的独热码当作真实值，把概率当作预测值，来计算每个样本的误差，再求平均值，即$$MSE=\frac{1}{n}\sum_{i=1}^n(\hat y_i-y_i)^2$$</p>
+<h3 id="一、分类的损失函数"><a href="#一、分类的损失函数" class="headerlink" title="一、分类的损失函数"></a>一、分类的损失函数</h3><p>为什么我们选择交叉熵作为损失函数呢？它与其他的损失函数相比有什么好处呢？我们用下面的例子来说明：<br>我们训练一个简单的神经网络，来判断图片中的动物是猫、狗还是兔子，用独热码表示最后结果。</p>
+<p><strong>模型一</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>正确答案</th>
+<th>猫概率</th>
+<th>狗概率</th>
+<th>兔子概率</th>
+<th>预测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>猫(1 0 0)</td>
+<td>0.8</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>猫(1 0 0)</td>
+</tr>
+<tr>
+<td>狗(0 1 0)</td>
+<td>0.05</td>
+<td>0.9</td>
+<td>0.05</td>
+<td>狗(0 1 0)</td>
+</tr>
+<tr>
+<td>兔子(0 0 1)</td>
+<td>0.4</td>
+<td>0.3</td>
+<td>0.3</td>
+<td>猫(1 0 0)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>模型二</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>正确答案</th>
+<th>猫概率</th>
+<th>狗概率</th>
+<th>兔子概率</th>
+<th>预测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>猫(1 0 0)</td>
+<td>0.6</td>
+<td>0.2</td>
+<td>0.2</td>
+<td>猫(1 0 0)</td>
+</tr>
+<tr>
+<td>狗(0 1 0)</td>
+<td>0.25</td>
+<td>0.7</td>
+<td>0.05</td>
+<td>狗(0 1 0)</td>
+</tr>
+<tr>
+<td>兔子(0 0 1)</td>
+<td>0.8</td>
+<td>0.15</td>
+<td>0.05</td>
+<td>猫(1 0 0)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们可以看到，尽管最后两个模型的输出完全一样，但从概率上看，模型一的表现要比模型二更好。</p>
+<h5 id="1-分类错误率"><a href="#1-分类错误率" class="headerlink" title="1.分类错误率"></a>1.分类错误率</h5><p>最朴素的一种定义方式，是直接计算分类错误的数量占总数量的百分比，即</p>
+<script type="math/tex; mode=display">\mbox{Classification Error} = \frac{\mbox{number of error}}{\mbox{total number}}</script><p>上面两个模型的分类错误率都是$\frac{1}{3}$，这样的损失函数无法判断出哪个模型表现更加优异。</p>
+<h5 id="2-均方误差"><a href="#2-均方误差" class="headerlink" title="2. 均方误差"></a>2. 均方误差</h5><p>均方误差一般用于回归，然而它也能用在分类中，我们把每个类别的独热码当作真实值，把概率当作预测值，来计算每个样本的误差，再求平均值，即<script type="math/tex">MSE=\frac{1}{n}\sum_{i=1}^n(\hat y_i-y_i)^2</script></p>
 <p><strong>模型一</strong><br>样本一  $MSE_{11}=\frac{1}{3}[(1-0.8)^2+(0-0.1)^2+(0-0.1)^2]=0.02$<br>样本二  $MSE_{12}=\frac{1}{3}[(0-0.05)^2+(1-0.95)^2+(0-0.05)^2]=0.0025$<br>样本三  $MSE_{13}=\frac{1}{3}[(0-0.4)^2+(0-0.3)^2+(1-0.3)^2]=0.247$<br>模型总误差 $MSE_1 = \frac{1}{3}(MSE_{11}+MSE_{12}+MSE_{13})=0.0897$<br><strong>模型二</strong><br>样本一  $MSE_{21}=\frac{1}{3}[(1-0.6)^2+(0-0.2)^2+(0-0.2)^2]=0.08$<br>样本二  $MSE_{22}=\frac{1}{3}[(0-0.25)^2+(1-0.7)^2+(0-0.05)^2]=0.0517$<br>样本三  $MSE_{23}=\frac{1}{3}[(0-0.8)^2+(0-0.15)^2+(1-0.05)^2]=0.5217$<br>模型总误差 $MSE_2 = \frac{1}{3}(MSE_{21}+MSE_{22}+MSE_{23})=0.2178$</p>
 <p>我们可以看到，由于我们引进对概率的计算，模型一的均方误差要小于模型二的均方误差。然而，我<strong>强烈不建议</strong>把MSE当作分类的损失函数，有以下两个原因：一是MSE用作分类的时候，训练刚开始的时候梯度下降的速度非常缓慢；二是并不是所有分类模型的MSE都是凸问题，因此深度学习的优化器表现会非常糟糕。下面我们来介绍比MSE在分类中更好用的交叉熵。<br>&emsp;</p>
 <h3 id="二、交叉熵的推导"><a href="#二、交叉熵的推导" class="headerlink" title="二、交叉熵的推导"></a>二、交叉熵的推导</h3><p>交叉熵是信息论中的内容，我们从最基础的概念开始推导。</p>
-<h5 id="1-信息量"><a href="#1-信息量" class="headerlink" title="1. 信息量"></a>1. 信息量</h5><p>一件事情可以包含多少信息呢？显而易见的事情大家都明白，不会包含很多信息；相反，出现概率越小的事情，就越违背人的直觉，也包含了越多的信息。例如：期中考试以往班上的第一名考了第一名，这件事在常人看来是正常的；而班级的最后一名考了第一名，蕴含了许多的信息——或许是他十分努力，奋发图强，或是他在课外和补习班老师上课，等等，都作为隐藏的信息，包含在这个事件当中。因此我们发现，一件事情的信息量与其发生的概率有关。<br>我们设离散随机变量$X$为事件，$\chi$为其取值范围，$p(x)=Pr(X=x),x\in \chi$为事件$x$发生的概率，我们定义$X=x_0$的信息量为(注：所有对数的底都是自然对数$e$):$$I(x_0)=-\log(p(x_0))$$</p>
-<h5 id="2-信息熵"><a href="#2-信息熵" class="headerlink" title="2.信息熵"></a>2.信息熵</h5><p>为什么我们要为事件$X$定义一个取值范围呢？因为一件事情可能有各种各样的可能性，而$\chi$代表了事件发生所有的可能性。例如：我打开了电脑，<br>| 事件               | 概率 |<br>| —————— | —- |<br>| 电脑正常开机       | 0.95 |<br>| 电脑黑屏，无法启动 | 0.04 |<br>| 电脑爆炸了         | 0.01 |<br>信息熵的定义是，所有事件的信息量乘上概率的期望，即<br>$$H(X)=-\sum_{i=1}^np(x_i)\log(p(x_i))$$在上面的例子中，我们的信息熵为$H(X)=-(0.95\times \log(0.95)+0.05\times \log(0.05)+0.01 \times \log(0.01))$。<br>有的问题只有两个可能性（例如扔硬币），服从伯努利分布，可以将信息熵的公式简化为：<br>设$p(0)=p,\ p(1)=1-p$<br>$$<br>\begin{aligned}<br>H(X) &amp;=-\sum_{i=1}^np(x_i)\log(p(x_i))\<br>&amp;=-(p\log p+ (1-p)\log(1-p))\<br>&amp;= -p\log p-(1-p)\log(1-p)<br>\end{aligned}<br>$$</p>
-<h5 id="3-相对熵-KL散度"><a href="#3-相对熵-KL散度" class="headerlink" title="3. 相对熵/KL散度"></a>3. 相对熵/KL散度</h5><p>不同事件在不同的条件下发生的概率是不同的，比如夏天和冬天买雪糕的概率是不同的。假设对于一个事件$X$，有两个概率分布$P(X)$和$Q(X)$。KL散度(Kullback-Leibler Divergence)指的就是在两个不同的概率分布下，该事件的信息熵的增量是多少。<br>在机器学习中，$P(X)$通常指代数据的真实分布，比如$[1\ 0\ 0]$，我们也可以将其理解为概率，因为已经是真实发生的数据了，所以我们非常肯定因变量属于哪一个类型，可以给对应的类型1的概率。$Q(X)$通常指代的是我们的预测结果，比如$[0.7\ 0.2\ 0.1]$，我们可以发现，我们的预测值不像真实值一样确定，所以我们需要更多的训练，来获取信息增量，才能让$Q(X)$到达$P(X)$的水平，当我们经过反复的训练，让Q变得和P一样完美，不再需要额外的信息增量了，此时Q与P等价；由此我们可以推导出KL散度的公式：<br>$$<br>\begin{aligned}<br>D_{KL}(p||q)&amp;=\sum_{i=1}^np(x_i)\log(\frac{p(x_i)}{q(x_i)})\<br>&amp;=\sum_{i=1}^np(x_i)\log(p(x_i))-\sum_{i=1}^np(x_i)\log(q(x_i))<br>\end{aligned}<br>$$<br>由此我们发现，KL散度越小，$P$分布和$Q$分布越接近。</p>
-<h5 id="4-交叉熵"><a href="#4-交叉熵" class="headerlink" title="4. 交叉熵"></a>4. 交叉熵</h5><p>我们在KL散度的公式的基础上继续推导：<br>$$<br>\begin{aligned}<br>D_{KL}(p||q)<br>&amp;=\sum_{i=1}^np(x_i)\log(p(x_i))-\sum_{i=1}^np(x_i)\log(q(x_i))\<br>&amp;=-H(p(X))+[-\sum_{i=1}^np(x_i)\log(q(x_i))]\<br>\end{aligned}<br>$$</p>
-<p>因为前面就是p的信息熵，是一个常数，我们把后面的部分定义为交叉熵：<br>$$<br>H(p,q)=-\sum_{i=1}^np(x_i)\log(q(x_i))<br>$$<br>在机器学习中，我们需要评估预测值与标签的差距，用的交叉熵当作损失函数，即$D_{KL}(y||\hat y)$。</p>
-<h5 id="5-交叉熵的计算"><a href="#5-交叉熵的计算" class="headerlink" title="5. 交叉熵的计算"></a>5. 交叉熵的计算</h5><p>我们来计算一算上文两个模型的交叉熵分别是多少：<br><strong>模型一</strong><br>样本一  $H(y,\hat y)<em>{11}=-[1\times \log0.8+0\times \log0.1 + 0\times \log0.1]=0.2231$<br>样本二  $H(y,\hat y)</em>{12}=-[0\times \log0.05+1\times \log0.9+ 0 \times \log0.05]=0.1054$<br>样本三  $H(y,\hat y)<em>{13}=-[0\times \log0.4 + 0\times \log0.3 + 1\times \log0.3]=1.204$<br>模型总误差 $H(y,\hat y)_1 = \frac{1}{3}(H(y,\hat y)</em>{11}+H(y,\hat y)<em>{12}+H(y,\hat y)</em>{13})=0.511$<br><strong>模型二</strong><br>样本一  $H(y,\hat y)<em>{21}=-[1\times \log0.6+0\times \log0.2 + 0\times \log0.2]=0.5108$<br>样本二  $H(y,\hat y)</em>{22}=-[0\times \log0.25+1\times \log0.7+ 0 \times \log0.05]=0.3567$<br>样本三  $H(y,\hat y)<em>{23}=-[0\times \log0.8 + 0\times \log0.15 + 1\times \log0.05]=2.9957$<br>模型总误差 $H(y,\hat y)_2 = \frac{1}{3}(H(y,\hat y)</em>{21}+H(y,\hat y)<em>{22}+H(y,\hat y)</em>{23})=1.288$<br>&emsp;<br>可以看到，交叉熵可以捕获两个模型之间的差距。<br>&emsp;</p>
+<h5 id="1-信息量"><a href="#1-信息量" class="headerlink" title="1. 信息量"></a>1. 信息量</h5><p>一件事情可以包含多少信息呢？显而易见的事情大家都明白，不会包含很多信息；相反，出现概率越小的事情，就越违背人的直觉，也包含了越多的信息。例如：期中考试以往班上的第一名考了第一名，这件事在常人看来是正常的；而班级的最后一名考了第一名，蕴含了许多的信息——或许是他十分努力，奋发图强，或是他在课外和补习班老师上课，等等，都作为隐藏的信息，包含在这个事件当中。因此我们发现，一件事情的信息量与其发生的概率有关。<br>我们设离散随机变量$X$为事件，$\chi$为其取值范围，$p(x)=Pr(X=x),x\in \chi$为事件$x$发生的概率，我们定义$X=x_0$的信息量为(注：所有对数的底都是自然对数$e$):<script type="math/tex">I(x_0)=-\log(p(x_0))</script></p>
+<h5 id="2-信息熵"><a href="#2-信息熵" class="headerlink" title="2.信息熵"></a>2.信息熵</h5><p>为什么我们要为事件$X$定义一个取值范围呢？因为一件事情可能有各种各样的可能性，而$\chi$代表了事件发生所有的可能性。例如：我打开了电脑，</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>概率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>电脑正常开机</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td>电脑黑屏，无法启动</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td>电脑爆炸了</td>
+<td>0.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>信息熵的定义是，所有事件的信息量乘上概率的期望，即</p>
+<p>$H(X)=-\sum_{i=1}^np(x_i)\log(p(x_i))$</p>
+<p>在上面的例子中，我们的信息熵为</p>
+<p>$H(X)=-(0.95\times \log(0.95)+0.05\times \log(0.05)+0.01 \times \log(0.01))$</p>
+<p>有的问题只有两个可能性（例如扔硬币），服从伯努利分布，可以将信息熵的公式简化为：<br>设$p(0)=p,\ p(1)=1-p$</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+H(X) &=-\sum_{i=1}^np(x_i)\log(p(x_i))\\
+&=-(p\log p+ (1-p)\log(1-p))\\
+&= -p\log p-(1-p)\log(1-p)
+\end{aligned}</script><h5 id="3-相对熵-KL散度"><a href="#3-相对熵-KL散度" class="headerlink" title="3. 相对熵/KL散度"></a>3. 相对熵/KL散度</h5><p>不同事件在不同的条件下发生的概率是不同的，比如夏天和冬天买雪糕的概率是不同的。假设对于一个事件$X$，有两个概率分布$P(X)$和$Q(X)$。KL散度(Kullback-Leibler Divergence)指的就是在两个不同的概率分布下，该事件的信息熵的增量是多少。<br>在机器学习中，$P(X)​$通常指代数据的真实分布，比如$[1\ 0\ 0]​$，我们也可以将其理解为概率，因为已经是真实发生的数据了，所以我们非常肯定因变量属于哪一个类型，可以给对应的类型1的概率。$Q(X)​$通常指代的是我们的预测结果，比如$[0.7\ 0.2\ 0.1]​$，我们可以发现，我们的预测值不像真实值一样确定，所以我们需要更多的训练，来获取信息增量，才能让$Q(X)​$到达$P(X)​$的水平，当我们经过反复的训练，让Q变得和P一样完美，不再需要额外的信息增量了，此时Q与P等价；由此我们可以推导出KL散度的公式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+D_{KL}(p||q)&=\sum_{i=1}^np(x_i)\log(\frac{p(x_i)}{q(x_i)})\\
+&=\sum_{i=1}^np(x_i)\log(p(x_i))-\sum_{i=1}^np(x_i)\log(q(x_i))
+\end{aligned}</script><p>由此我们发现，KL散度越小，$P$分布和$Q$分布越接近。</p>
+<h5 id="4-交叉熵"><a href="#4-交叉熵" class="headerlink" title="4. 交叉熵"></a>4. 交叉熵</h5><p>我们在KL散度的公式的基础上继续推导：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+D_{KL}(p||q)
+&=\sum_{i=1}^np(x_i)\log(p(x_i))-\sum_{i=1}^np(x_i)\log(q(x_i))\\
+&=-H(p(X))+[-\sum_{i=1}^np(x_i)\log(q(x_i))]\\
+\end{aligned}</script><p>因为前面就是p的信息熵，是一个常数，我们把后面的部分定义为交叉熵：</p>
+<script type="math/tex; mode=display">
+H(p,q)=-\sum_{i=1}^np(x_i)\log(q(x_i))</script><p>在机器学习中，我们需要评估预测值与标签的差距，用的交叉熵当作损失函数，即$D_{KL}(y||\hat y)$。</p>
+<h5 id="5-交叉熵的计算"><a href="#5-交叉熵的计算" class="headerlink" title="5. 交叉熵的计算"></a>5. 交叉熵的计算</h5><p>我们来计算一算上文两个模型的交叉熵分别是多少：<br><strong>模型一</strong><br>样本一  $H(y,\hat y)_{11}=-[1\times \log0.8+0\times \log0.1 + 0\times \log0.1]=0.2231$<br>样本二  $H(y,\hat y)_{12}=-[0\times \log0.05+1\times \log0.9+ 0 \times \log0.05]=0.1054$<br>样本三  $H(y,\hat y)_{13}=-[0\times \log0.4 + 0\times \log0.3 + 1\times \log0.3]=1.204$<br>模型总误差 $H(y,\hat y)_1 = \frac{1}{3}(H(y,\hat y)_{11}+H(y,\hat y)_{12}+H(y,\hat y)_{13})=0.511$<br><strong>模型二</strong><br>样本一  $H(y,\hat y)_{21}=-[1\times \log0.6+0\times \log0.2 + 0\times \log0.2]=0.5108$<br>样本二  $H(y,\hat y)_{22}=-[0\times \log0.25+1\times \log0.7+ 0 \times \log0.05]=0.3567$<br>样本三  $H(y,\hat y)_{23}=-[0\times \log0.8 + 0\times \log0.15 + 1\times \log0.05]=2.9957$<br>模型总误差 $H(y,\hat y)_2 = \frac{1}{3}(H(y,\hat y)_{21}+H(y,\hat y)_{22}+H(y,\hat y)_{23})=1.288$<br>&emsp;<br>可以看到，交叉熵可以捕获两个模型之间的差距。<br>&emsp;</p>
 <h3 id="三、反向传播"><a href="#三、反向传播" class="headerlink" title="三、反向传播"></a>三、反向传播</h3><p>我们来看看模型最后两层的反向传播的情况。由于二分类和多分类我们使用的激活函数不同，因此我们需要单独对其进行求导。</p>
-<h5 id="1-二分类"><a href="#1-二分类" class="headerlink" title="1. 二分类"></a>1. 二分类</h5><p>二分类的模型最后一层的激活函数使用的是Sigmoid函数，我们来看一下模型的结构：<br><img src="https://img-blog.csdnimg.cn/20200209124130302.png" alt=""><br>根据链式法则，<br>$$<br>\frac{\partial L}{\partial w_i}=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}<br>$$<br>我们依次进行求导<br>$$<br>\begin{aligned}<br>\frac{\partial L}{\partial p}<br>&amp;=\frac{\partial}{\partial p}[-(y\log p+(1-y)\log(1-p))]\<br>&amp;=-\frac{y}{p}+\frac{1-y}{1-p}<br>\end{aligned}<br>$$<br>$$<br>\begin{aligned}<br>\frac{\partial p}{\partial z}<br>&amp;=\frac{\partial\sigma(z)}{\partial z}=\frac{\partial}{\partial z}(\frac{e^z}{1+e^{z}})\<br>&amp;=\frac{\partial}{\partial z}(\frac{1}{1+e^{-z}})\<br>&amp;=\frac{e^{-z}}{(1+e^{-z})^2}\<br>&amp;=\frac{1}{1+e^{-z}}\times\frac{e^{-z}}{1+e^{-z}}\<br>&amp;=\sigma(z)\cdot[1-\sigma(z)]<br>\end{aligned}<br>$$<br>$$<br>\begin{aligned}<br>\frac{\partial z}{\partial w_i}=\frac{\partial}{\partial w_i}(w_ix_i+b_i)=x_i<br>\end{aligned}<br>$$<br>$$<br>\begin{aligned}<br>\frac{\partial L}{\partial w_i}<br>&amp;=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}\<br>&amp;=[-\frac{y}{p}+\frac{1-y}{1-p}]\cdot\sigma(z)\cdot[1-\sigma(z)]\cdot x_i\<br>&amp;=[-\frac{y}{\sigma(z)}+\frac{1-y}{1-\sigma(z)}]\cdot\sigma(z)\cdot[1-\sigma(z)]\cdot x_i\<br>&amp;=[-y[1-\sigma(z)]+(1-y)\sigma(z)]\cdot x_i\<br>&amp;=[-y+y\cdot \sigma(z)+\sigma(z)-y\cdot\sigma(z)]\cdot x_i\<br>&amp;=[\sigma(z)-y]\cdot x_i<br>\end{aligned}<br>$$</p>
-<h5 id="2-多分类"><a href="#2-多分类" class="headerlink" title="2.多分类"></a>2.多分类</h5><p>多分类模型最后一层的激活函数使用的是Softmax函数，模型结构为：<br><img src="https://img-blog.csdnimg.cn/20200209131105300.png" alt="在这里插入图片描述"><br>和上面一样，根据链式法则，<br>$$<br>\frac{\partial L}{\partial w_i}=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}<br>$$<br>我们依次进行求导<br>$$<br>\begin{aligned}<br>\frac{\partial L}{\partial p}<br>&amp;=\frac{\partial}{\partial p}[-\sum_{i=1}^ny_i\log p]\<br>&amp;=-\sum_{i=1}^n\frac{y_i}{p}<br>\end{aligned}<br>$$<br>Softmax函数的公式为$\sigma(z_i)=\frac{e^{z_i}}{\sum_{k=1}^n e^{z_k}}$，然而，Softmax在计算的过程中经常出现由于数据溢出导致的返回nan的in情况，因此我们需要将其乘上一个系数，让数值大小下降下来，即：<br>$$<br>\begin{aligned}<br>\sigma(z_i)<br>&amp;=\frac{Ce{z_i}}{C\sum_{k=1}ne^{z_k}}\<br>&amp;=\frac{e^{z_i+\log C}}{\sum_{k=1}ne{z_k+\log C}}<br>\end{aligned}<br>$$<br>我们通常让$\log C=-\max(z)$，让比较大的指数变小；由此，我们设$z_i-\log C=z_i’$，并求其梯度<br>$$<br>\begin{aligned}<br>\frac{\partial p}{\partial z_j’}<br>&amp;=\frac{\partial\sigma(z_i’)}{\partial z_j’}=\frac{\partial}{\partial z_j’}\frac{e{z_i’}}{\sum_{k=1}n e^{z_k’}}<br>\end{aligned}<br>$$<br>当$i \ne j$时<br>$$<br>\begin{aligned}</p>
-<p>\frac{\partial p}{\partial z_j’}<br>&amp;=\frac{0-e{z_i’}e{z_j’}}{(\sum_{k=1}^n e{z_k’})2}\<br>&amp;=-\frac{e{z_i’}}{(\sum_{k=1}n e^{z_k’})}\cdot \frac{e{z_j’}}{(\sum_{k=1}n e^{z_k’})}\<br>&amp;=-\sigma(z_i)\cdot \sigma(z_j)</p>
-<p>\end{aligned}<br>$$<br>当$i = j$时<br>$$<br>\begin{aligned}<br>\frac{\partial p}{\partial z_j’}<br>&amp;=\frac{e{z_i’}\sum_{k=1}n e{z_k’}-(e{z_i’})2}{(\sum_{k=1}n e{z_k’})2}\<br>&amp;=\frac{e{z_i’}}{(\sum_{k=1}n e^{z_k’})}\cdot \frac{\sum{k=1}^n e{z_k’}-e{z_i’}}{(\sum{k=1}^n e^{z_k’})}\<br>&amp;=\sigma(z_i’)\cdot (1-\sigma(z_j’))<br>\end{aligned}<br>$$<br>由此可得：<br>$$<br>\frac{\partial p}{\partial z_j’}=<br>\begin{cases}<br>-\sigma(z_i)\cdot \sigma(z_j), &amp; i \ne j\<br>\sigma(z_i)\cdot (1-\sigma(z_j)), &amp; i = j<br>\end{cases}<br>$$</p>
-<p>$$<br>\begin{aligned}<br>\frac{\partial z}{\partial w_i}=\frac{\partial}{\partial w_i}(w_ix_i+b_i)=x_i<br>\end{aligned}<br>$$<br>$$<br>\begin{aligned}<br>\frac{\partial L}{\partial w_i}<br>&amp;=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}\<br>&amp;=-[\sum_{k\ne i}^n\frac{y_k}{p_k}\cdot [-\sigma(z_i)\cdot \sigma(z_k)]+\frac{y_i}{p_i}\cdot \sigma(z_i)\cdot (1-\sigma(z_i))]\cdot x_i\<br>&amp;=-[\sum_{k\ne i}^n\frac{y_k}{\sigma(z_k)}\cdot [-\sigma(z_i)\cdot \sigma(z_k)]+\frac{y_i}{\sigma(z_i)}\cdot \sigma(z_i)\cdot (1-\sigma(z_i))]\cdot x_i\<br>&amp;=-[-\sum_{k\ne i}^n y_k\cdot \sigma(z_i)+y_i(1-\sigma(z_i))]\cdot x_i\<br>&amp;=[\sum_{k\ne i}^n y_k\cdot \sigma(z_i)+y_i\cdot\sigma(z_i)-y_i]\cdot x_i\<br>\end{aligned}<br>$$<br>因为我们的向量$y$是独热码表示，所以$\sum_{k\ne i}^n y_k + y_i = 1$，因此上式可以化简为：<br>$$<br>\frac{\partial L}{\partial w_i}=[\sigma(z_i)-y_i]\cdot x_i<br>$$<br>&emsp;</p>
+<h5 id="1-二分类"><a href="#1-二分类" class="headerlink" title="1. 二分类"></a>1. 二分类</h5><p>二分类的模型最后一层的激活函数使用的是Sigmoid函数，我们来看一下模型的结构：<br><img src="https://img-blog.csdnimg.cn/20200209124130302.png" alt=""><br>根据链式法则，</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w_i}=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}</script><p>我们依次进行求导</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial L}{\partial p}
+&=\frac{\partial}{\partial p}[-(y\log p+(1-y)\log(1-p))]\\
+&=-\frac{y}{p}+\frac{1-y}{1-p}
+\end{aligned}</script><p>&emsp;</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial p}{\partial z}
+&=\frac{\partial\sigma(z)}{\partial z}=\frac{\partial}{\partial z}(\frac{e^z}{1+e^{z}})\\
+&=\frac{\partial}{\partial z}(\frac{1}{1+e^{-z}})\\
+&=\frac{e^{-z}}{(1+e^{-z})^2}\\
+&=\frac{1}{1+e^{-z}}\times\frac{e^{-z}}{1+e^{-z}}\\
+&=\sigma(z)\cdot[1-\sigma(z)]
+\end{aligned}</script><p>&emsp;</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial z}{\partial w_i}=\frac{\partial}{\partial w_i}(w_ix_i+b_i)=x_i
+\end{aligned}</script><p>&emsp;</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial L}{\partial w_i}
+&=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}\\
+&=[-\frac{y}{p}+\frac{1-y}{1-p}]\cdot\sigma(z)\cdot[1-\sigma(z)]\cdot x_i\\
+&=[-\frac{y}{\sigma(z)}+\frac{1-y}{1-\sigma(z)}]\cdot\sigma(z)\cdot[1-\sigma(z)]\cdot x_i\\
+&=[-y[1-\sigma(z)]+(1-y)\sigma(z)]\cdot x_i\\
+&=[-y+y\cdot \sigma(z)+\sigma(z)-y\cdot\sigma(z)]\cdot x_i\\
+&=[\sigma(z)-y]\cdot x_i
+\end{aligned}</script><h5 id="2-多分类"><a href="#2-多分类" class="headerlink" title="2.多分类"></a>2.多分类</h5><p>多分类模型最后一层的激活函数使用的是Softmax函数，模型结构为：<br><img src="https://img-blog.csdnimg.cn/20200209131105300.png" alt="在这里插入图片描述"><br>和上面一样，根据链式法则，</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w_i}=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}</script><p>我们依次进行求导</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial L}{\partial p}
+&=\frac{\partial}{\partial p}[-\sum_{i=1}^ny_i\log p]\\
+&=-\sum_{i=1}^n\frac{y_i}{p}
+\end{aligned}</script><p>Softmax函数的公式为$\sigma(z_i)=\frac{e^{z_i}}{\sum_{k=1}^n e^{z_k}}$，然而，Softmax在计算的过程中经常出现由于数据溢出导致的返回nan的in情况，因此我们需要将其乘上一个系数，让数值大小下降下来，即：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\sigma(z_i)
+&=\frac{Ce{z_i}}{C\sum_{k=1}ne^{z_k}}\\
+&=\frac{e^{z_i+\log C}}{\sum_{k=1}ne{z_k+\log C}}
+\end{aligned}</script><p>我们通常让$\log C=-\max(z)$，让比较大的指数变小；由此，我们设$z_i-\log C=z_i’$，并求其梯度</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial p}{\partial z_j'}
+&=\frac{\partial\sigma(z_i')}{\partial z_j'}=\frac{\partial}{\partial z_j'}\frac{e{z_i'}}{\sum_{k=1}n e^{z_k'}}
+\end{aligned}</script><p>当$i \ne j$时</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+
+\frac{\partial p}{\partial z_j'}
+&=\frac{0-e{z_i'}e{z_j'}}{(\sum_{k=1}^n e{z_k'})2}\\
+&=-\frac{e{z_i'}}{(\sum_{k=1}n e^{z_k'})}\cdot \frac{e{z_j'}}{(\sum_{k=1}n e^{z_k'})}\\
+&=-\sigma(z_i)\cdot \sigma(z_j)
+
+\end{aligned}</script><p>当$i = j$时</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial p}{\partial z_j'}
+&=\frac{e{z_i'}\sum_{k=1}n e{z_k'}-(e{z_i'})2}{(\sum_{k=1}n e{z_k'})2}\\
+&=\frac{e{z_i'}}{(\sum_{k=1}n e^{z_k'})}\cdot \frac{\sum{k=1}^n e{z_k'}-e{z_i'}}{(\sum{k=1}^n e^{z_k'})}\\
+&=\sigma(z_i')\cdot (1-\sigma(z_j'))
+\end{aligned}</script><p>由此可得：</p>
+<script type="math/tex; mode=display">
+\frac{\partial p}{\partial z_j'}=
+\begin{cases}
+-\sigma(z_i)\cdot \sigma(z_j), & i \ne j\\
+\sigma(z_i)\cdot (1-\sigma(z_j)), & i = j
+\end{cases}</script><p>&emsp;</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial z}{\partial w_i}=\frac{\partial}{\partial w_i}(w_ix_i+b_i)=x_i
+\end{aligned}</script><p>&emsp;</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial L}{\partial w_i}
+&=\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial w_i}\\
+&=-[\sum_{k\ne i}^n\frac{y_k}{p_k}\cdot [-\sigma(z_i)\cdot \sigma(z_k)]+\frac{y_i}{p_i}\cdot \sigma(z_i)\cdot (1-\sigma(z_i))]\cdot x_i\\
+&=-[\sum_{k\ne i}^n\frac{y_k}{\sigma(z_k)}\cdot [-\sigma(z_i)\cdot \sigma(z_k)]+\frac{y_i}{\sigma(z_i)}\cdot \sigma(z_i)\cdot (1-\sigma(z_i))]\cdot x_i\\
+&=-[-\sum_{k\ne i}^n y_k\cdot \sigma(z_i)+y_i(1-\sigma(z_i))]\cdot x_i\\
+&=[\sum_{k\ne i}^n y_k\cdot \sigma(z_i)+y_i\cdot\sigma(z_i)-y_i]\cdot x_i\\
+\end{aligned}</script><p>因为我们的向量$y$是独热码表示，所以$\sum_{k\ne i}^n y_k + y_i = 1$，因此上式可以化简为：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w_i}=[\sigma(z_i)-y_i]\cdot x_i</script><p>&emsp;</p>
 <h3 id="四、交叉熵的实现"><a href="#四、交叉熵的实现" class="headerlink" title="四、交叉熵的实现"></a>四、交叉熵的实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Loss</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(self, predicted:Tensor, actual:Tensor)</span> -&gt; Tensor:</span></span><br><span class="line">		<span class="keyword">raise</span> NotImplementedError</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">grad</span><span class="params">(self, predicted:Tensor, actual:Tensor)</span> -&gt; Tensor:</span></span><br><span class="line">		<span class="keyword">raise</span> NotImplementedError</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CrossEntropy</span><span class="params">(Loss)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(self, predicted:Tensor, actual:Tensor)</span> -&gt; Tensor:</span></span><br><span class="line">		m = actual.shape[<span class="number">0</span>]</span><br><span class="line">		log_likelihood = -np.log(predicted)</span><br><span class="line">		loss = np.sum(log_likelihood) / m</span><br><span class="line">		<span class="keyword">return</span> loss</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">grad</span><span class="params">(self, predicted:Tensor, actual:Tensor)</span> -&gt; Tensor:</span></span><br><span class="line">		m = actual.shape[<span class="number">0</span>]</span><br><span class="line">		grad = predicted[range(m),actual.tolist()] -= <span class="number">1</span></span><br><span class="line">		grad /= m</span><br><span class="line">		<span class="keyword">return</span> grad</span><br></pre></td></tr></table></figure>
 <p>&emsp;</p>
 <h3 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h3><p>[1]. <a href="https://zhuanlan.zhihu.com/p/35709485" target="_blank" rel="noopener">知乎专栏：损失函数 - 交叉熵损失函数</a><br>[2]. <a href="https://blog.csdn.net/tsyccnh/article/details/79163834" target="_blank" rel="noopener">一文搞懂交叉熵在机器学习中的应用，透彻理解交叉熵背后的直觉</a><br>[3]. <a href="https://blog.csdn.net/Gipsy_Danger/article/details/81292148" target="_blank" rel="noopener">Softmax和交叉熵的深度解析和Python实现</a><br>[4]. Stanford University CS230 - Deep Learning</p>
@@ -307,6 +512,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
 
         
 
@@ -387,6 +595,10 @@
           <span class="site-state-item-count">1</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
@@ -518,6 +730,54 @@
   
 
   
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
 
   
 
