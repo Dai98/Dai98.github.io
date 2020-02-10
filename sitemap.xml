@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/uncategorized/Cross%20Entropy</loc>
+    <loc>http://yoursite.com/about/index.html</loc>
     
-    <lastmod>2020-02-10T05:48:20.035Z</lastmod>
+    <lastmod>2020-02-10T07:42:04.135Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/Cross%20Entropy</loc>
+    
+    <lastmod>2020-02-10T07:34:07.635Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/categories/index.html</loc>
+    
+    <lastmod>2020-02-10T07:28:41.451Z</lastmod>
     
   </url>
   
