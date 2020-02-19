@@ -48,20 +48,19 @@
   };
 </script>
 
-  <meta name="description" content="&amp;emsp;&amp;emsp;这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对">
+  <meta name="description" content="这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为什么样本方差要除以n-1">
-<meta property="og:url" content="http://yoursite.com/uncategorized/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+<meta property="og:url" content="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
 <meta property="og:site_name" content="Daniel的博客">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对">
+<meta property="og:description" content="这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-09-12T03:31:21.000Z">
-<meta property="article:modified_time" content="2020-02-19T15:59:52.154Z">
+<meta property="article:modified_time" content="2020-02-19T16:17:34.005Z">
 <meta property="article:author" content="DanielRX">
-<meta property="article:tag" content="数学">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/uncategorized/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+<link rel="canonical" href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
 
 
 <script id="page-configurations">
@@ -186,7 +185,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/uncategorized/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -216,8 +215,19 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-19 23:59:52" itemprop="dateModified" datetime="2020-02-19T23:59:52+08:00">2020-02-19</time>
+                <time title="修改时间：2020-02-20 00:17:34" itemprop="dateModified" datetime="2020-02-20T00:17:34+08:00">2020-02-20</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%A6/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -232,7 +242,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -251,12 +261,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>&emsp;&emsp;这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)=\frac{1}{n}\sum_{i=1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)=\frac{1}{n-1}\sum_{i=1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰我的问题也解决了。</p>
-<h3 id="一、简单随机抽样"><a href="#一、简单随机抽样" class="headerlink" title="一、简单随机抽样"></a>一、简单随机抽样</h3><p>&emsp;&emsp;假设一个样本空间$\Omega=\{1,2,…,9\}$，每次从样本空间中随机抽取一个数X，要计算X小于5的概率，即$P(X&lt;5)$。但如果仔细想一想，当我们抽取了一个X，X应该是一个确认的常数，为什么会有小于5的概率呢？<br>&emsp;&emsp;这是因为，我们感兴趣的不是选出特定那个数字小于5的概率。随机性来源于我们假定的随机在样本空间中抽取一个数字，并假设每个数字被抽取到的概率相等。这个过程叫做简单随机抽样（Simple Random Sample, SRS）。进一步说，我们感兴趣的是每次随机抽取一个数字，这个数字小于5的概率。<br>&emsp;&emsp;然而，样本数据并<strong>不能反映</strong>数据的真实情况，因为随机抽样的随机性。例如在我们的例子內，假如我们做9次简单随机抽样，我们并不能保证数字1到9都会出现，这也是为什么，数据的总方差和样本方差是不一样的。</p>
-<h3 id="二、中心极限定理"><a href="#二、中心极限定理" class="headerlink" title="二、中心极限定理"></a>二、中心极限定理</h3><p>&emsp;&emsp;然而，由于中心极限定理，假设我们做n次简单随机抽样，当n是一个足够大数字的时候，我们随机抽样样本的均值$\bar x$是服从于正态分布的。<br>&emsp;&emsp;我们知道，对正态分布重要的参数是变量的均值与方差，即$\bar x$的均值与方差。我们假设样本为$X = \{x_1,x_2,…,x_n\}$，样本均值为$\bar x$，总体均值为$\mu$，样本方差为$S^2$，总体方差为$\sigma^2$，则：</p>
-<script type="math/tex; mode=display">E(\bar x)=E(\frac{1}{n}\sum_{i=1}^n x_i))=\frac{1}{n}\sum_{i=1}^nE(x_i)=\frac{1}{n}\cdot n \cdot E(X)=\mu</script><script type="math/tex; mode=display">D(\bar x)=D(\frac{1}{n}\sum_{i=1}^n x_i)=\frac{1}{n^2}\sum_{i=1}^nD(x_i)=\frac{\sigma^2}{n}</script><p>&emsp;&emsp;因此我们可得，简单随机抽样的样本均值$\bar x ～N(\mu,\frac{\sigma^2}{n})$。</p>
-<h3 id="三、无偏估计"><a href="#三、无偏估计" class="headerlink" title="三、无偏估计"></a>三、无偏估计</h3><p>&emsp;&emsp;如果我们只取一组随机抽样的均值$\bar x$，那这组均值有很大概率与总均值$\mu$有偏差的，当我们取多次求抽样样本均值，再求均值，$E(\bar x)$就会越来越靠近真实均值$\mu$，这也是中心极限定理的作用所在。如果我们想获得总样本均值的<strong>无偏估计</strong>，就需要多次抽样求平均值来接近真实值。</p>
-<h3 id="四、样本方差"><a href="#四、样本方差" class="headerlink" title="四、样本方差"></a>四、样本方差</h3><p>&emsp;&emsp;根据刚才的思路，来计算样本方差：</p>
+        <p>这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)=\frac{1}{n}\sum_{i=1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)=\frac{1}{n-1}\sum_{i=1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰我的问题也解决了。</p>
+<h3 id="一、简单随机抽样"><a href="#一、简单随机抽样" class="headerlink" title="一、简单随机抽样"></a>一、简单随机抽样</h3><p>假设一个样本空间$\Omega=\{1,2,…,9\}$，每次从样本空间中随机抽取一个数X，要计算X小于5的概率，即$P(X&lt;5)$。但如果仔细想一想，当我们抽取了一个X，X应该是一个确认的常数，为什么会有小于5的概率呢？</p>
+<p>这是因为，我们感兴趣的不是选出特定那个数字小于5的概率。随机性来源于我们假定的随机在样本空间中抽取一个数字，并假设每个数字被抽取到的概率相等。这个过程叫做简单随机抽样（Simple Random Sample, SRS）。进一步说，我们感兴趣的是每次随机抽取一个数字，这个数字小于5的概率。</p>
+<p>然而，样本数据并<strong>不能反映</strong>数据的真实情况，因为随机抽样的随机性。例如在我们的例子內，假如我们做9次简单随机抽样，我们并不能保证数字1到9都会出现，这也是为什么，数据的总方差和样本方差是不一样的。</p>
+<h3 id="二、中心极限定理"><a href="#二、中心极限定理" class="headerlink" title="二、中心极限定理"></a>二、中心极限定理</h3><p>然而，由于中心极限定理，假设我们做n次简单随机抽样，当n是一个足够大数字的时候，我们随机抽样样本的均值$\bar x$是服从于正态分布的。</p>
+<p>我们知道，对正态分布重要的参数是变量的均值与方差，即$\bar x$的均值与方差。我们假设样本为$X = \{x_1,x_2,…,x_n\}$，样本均值为$\bar x$，总体均值为$\mu$，样本方差为$S^2$，总体方差为$\sigma^2$，则：</p>
+<script type="math/tex; mode=display">E(\bar x)=E(\frac{1}{n}\sum_{i=1}^n x_i))=\frac{1}{n}\sum_{i=1}^nE(x_i)=\frac{1}{n}\cdot n \cdot E(X)=\mu</script><script type="math/tex; mode=display">D(\bar x)=D(\frac{1}{n}\sum_{i=1}^n x_i)=\frac{1}{n^2}\sum_{i=1}^nD(x_i)=\frac{\sigma^2}{n}</script><p>因此我们可得，简单随机抽样的样本均值$\bar x ～N(\mu,\frac{\sigma^2}{n})$。</p>
+<h3 id="三、无偏估计"><a href="#三、无偏估计" class="headerlink" title="三、无偏估计"></a>三、无偏估计</h3><p>如果我们只取一组随机抽样的均值$\bar x$，那这组均值有很大概率与总均值$\mu$有偏差的，当我们取多次求抽样样本均值，再求均值，$E(\bar x)$就会越来越靠近真实均值$\mu$，这也是中心极限定理的作用所在。如果我们想获得总样本均值的<strong>无偏估计</strong>，就需要多次抽样求平均值来接近真实值。</p>
+<h3 id="四、样本方差"><a href="#四、样本方差" class="headerlink" title="四、样本方差"></a>四、样本方差</h3><p>根据刚才的思路，来计算样本方差：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     E(S^2)  & = E(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2) =  E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)-(\bar x-\mu))^2)\\
@@ -266,16 +279,16 @@
     & \therefore E(S^2)=E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)^2-\sum_{i=1}^n(\bar x-\mu)^2)))\\
     &=E(\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2)-E(\sum_{i=1}^n(\bar x-\mu)^2)\\
     &=\sigma^2-E(\sum_{i=1}^n(\bar x-\mu)^2) \le\sigma^2
-\end{aligned}</script><p>&emsp;&emsp;从而可得，样本方差的均值是小于总方差的。我们继续化简：</p>
+\end{aligned}</script><p>从而可得，样本方差的均值是小于总方差的。我们继续化简：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 & E(\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2)-E(\sum_{i=1}^n(\bar x-\mu)^2)\\
 & =D(X)-D(\bar x)\\
 & = \sigma^2 - \frac{1}{n}\sigma^2\\
 & = \frac{n-1}{n}\sigma^2
-\end{aligned}</script><p>&emsp;&emsp;所以，$E(S^2)=\frac{n-1}{n}\sigma^2$，如果我们要为样本方差修正，就要为$S^2$乘上$\frac{n}{n-1}$，所以我们可得样本方差为：</p>
+\end{aligned}</script><p>所以，$E(S^2)=\frac{n-1}{n}\sigma^2$，如果我们要为样本方差修正，就要为$S^2$乘上$\frac{n}{n-1}$，所以我们可得样本方差为：</p>
 <script type="math/tex; mode=display">
-    S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar x)^2</script><p>&emsp;&emsp;这就是为什么样本方差的分母除的是$n-1$，而不是$n$。</p>
+S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar x)^2</script><p>&emsp;&emsp;这就是为什么样本方差的分母除的是$n-1$，而不是$n$。</p>
 <h3 id="五、参考文献"><a href="#五、参考文献" class="headerlink" title="五、参考文献"></a>五、参考文献</h3><ol>
 <li><a href="https://blog.csdn.net/Hearthougan/article/details/77859173" target="_blank" rel="noopener">彻底理解样本方差为何除以n-1</a></li>
 <li><a href="https://blog.csdn.net/KID_yuan/article/details/84783671" target="_blank" rel="noopener">样本均值的期望等于总体期望，样本方差的期望等于总体方差</a></li>
@@ -296,7 +309,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/uncategorized/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1" title="为什么样本方差要除以n-1">http://yoursite.com/uncategorized/为什么样本方差要除以n-1</a>
+    <a href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1" title="为什么样本方差要除以n-1">http://yoursite.com/数学/为什么样本方差要除以n-1</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -306,9 +319,6 @@
 
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
-          </div>
 
         
 
@@ -400,12 +410,8 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
@@ -527,7 +533,7 @@
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(bp, s);
     })();
-  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  </script>
 
 
 
@@ -546,6 +552,54 @@
   
 
   
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
 
   
 
