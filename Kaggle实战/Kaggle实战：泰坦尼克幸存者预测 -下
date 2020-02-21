@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-loading-bar.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="上一篇文章介绍了如何使用深度学习来预测泰坦尼克号幸存者，这一部分使用多分类器投票来做。由于数据预处理部分比较相似，重复的地方不再赘述，把重点放在模型的构建和优化上面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kaggle实战：泰坦尼克幸存者预测 -下">
+<meta property="og:url" content="http://yoursite.com/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%E4%B8%8B">
+<meta property="og:site_name" content="Daniel的博客">
+<meta property="og:description" content="上一篇文章介绍了如何使用深度学习来预测泰坦尼克号幸存者，这一部分使用多分类器投票来做。由于数据预处理部分比较相似，重复的地方不再赘述，把重点放在模型的构建和优化上面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219174228177.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219175842529.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219180840576.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219180929156.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219194828999.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219194914465.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219200003805.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219200113476.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200219200349950.png">
+<meta property="article:published_time" content="2020-02-19T12:04:56.000Z">
+<meta property="article:modified_time" content="2020-02-21T12:33:51.639Z">
+<meta property="article:author" content="DanielRX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200219174228177.png">
+
+<link rel="canonical" href="http://yoursite.com/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%E4%B8%8B">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Kaggle实战：泰坦尼克幸存者预测 -下 | Daniel的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Daniel的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/Dai98" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%E4%B8%8B">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DanielRX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Daniel的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kaggle实战：泰坦尼克幸存者预测 -下
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-19 20:04:56" itemprop="dateCreated datePublished" datetime="2020-02-19T20:04:56+08:00">2020-02-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-21 20:33:51" itemprop="dateModified" datetime="2020-02-21T20:33:51+08:00">2020-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kaggle%E5%AE%9E%E6%88%98/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaggle实战</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a href="https://blog.csdn.net/Kayaobi/article/details/104257314" target="_blank" rel="noopener">上一篇文章</a>介绍了如何使用深度学习来预测泰坦尼克号幸存者，这一部分使用多分类器投票来做。由于数据预处理部分比较相似，重复的地方不再赘述，把重点放在模型的构建和优化上面。</p>
+<a id="more"></a>
+<p>使用的环境以及依赖包版本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> scipy</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> IPython</span><br><span class="line"><span class="keyword">from</span> IPython <span class="keyword">import</span> display</span><br><span class="line"><span class="keyword">import</span> sklearn</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">import</span> xgboost</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> warnings</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> time</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200219174228177.png" alt=""><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Machine Learning algorithms</span></span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm, tree, linear_model, neighbors, naive_bayes, ensemble</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> discriminant_analysis,gaussian_process</span><br><span class="line"><span class="keyword">from</span> xgboost <span class="keyword">import</span> XGBClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># Model helper</span></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder, LabelEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> feature_selection</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> model_selection</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> metrics</span><br><span class="line"></span><br><span class="line"><span class="comment"># Visualization</span></span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib.pylab <span class="keyword">as</span> pylab</span><br><span class="line"><span class="keyword">from</span> pandas.plotting <span class="keyword">import</span> scatter_matrix</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configuration</span></span><br><span class="line">%matplotlib inline</span><br><span class="line">mpl.style.use(<span class="string">"ggplot"</span>)</span><br><span class="line">sns.set_style(<span class="string">"white"</span>)</span><br><span class="line">pylab.rcParams[<span class="string">"figure.figsize"</span>] = <span class="number">12</span>,<span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="一、数据预处理"><a href="#一、数据预处理" class="headerlink" title="一、数据预处理"></a>一、数据预处理</h3><p>依旧是先填补空缺值，再将数值转换为类别型变量，区别是这次我们不用再将变量转化为独热码了。下面的过程在上一篇文章都介绍过，不再重复了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data = [train,test]</span><br><span class="line"></span><br><span class="line">train_backup = train.copy()</span><br><span class="line">test_backup = test.copy()</span><br></pre></td></tr></table></figure><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> dataset <span class="keyword">in</span> data:</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Fill with median value</span></span><br><span class="line">    dataset[<span class="string">"Age"</span>].fillna(dataset[<span class="string">"Age"</span>].median(),inplace = <span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Fill with the most common value</span></span><br><span class="line">    dataset[<span class="string">"Embarked"</span>].fillna(dataset[<span class="string">"Embarked"</span>].mode()[<span class="number">0</span>], inplace = <span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Fill with median value</span></span><br><span class="line">    dataset[<span class="string">"Fare"</span>].fillna(dataset[<span class="string">"Fare"</span>].median(),inplace = <span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">drop_columns = [<span class="string">"PassengerId"</span>,<span class="string">"Cabin"</span>,<span class="string">"Ticket"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> dataset <span class="keyword">in</span> data:</span><br><span class="line">    </span><br><span class="line">    dataset.drop(drop_columns, axis = <span class="number">1</span>, inplace = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">min_stat_thresh = <span class="number">10</span></span><br><span class="line"><span class="keyword">for</span> dataset <span class="keyword">in</span> data:</span><br><span class="line">    </span><br><span class="line">    freq = (dataset[<span class="string">"Title"</span>].value_counts() &lt; min_stat_thresh)</span><br><span class="line">    dataset[<span class="string">"Title"</span>] = dataset[<span class="string">"Title"</span>].apply(<span class="keyword">lambda</span> x: <span class="string">"others"</span> <span class="keyword">if</span> freq .loc[x] <span class="keyword">else</span> x)</span><br></pre></td></tr></table></figure><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">label = LabelEncoder()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> dataset <span class="keyword">in</span> data:    </span><br><span class="line">    dataset[<span class="string">"Sex_Code"</span>] = label.fit_transform(dataset[<span class="string">"Sex"</span>])</span><br><span class="line">    dataset[<span class="string">"Embarked_Code"</span>] = label.fit_transform(dataset[<span class="string">"Embarked"</span>])</span><br><span class="line">    dataset[<span class="string">"Title_Code"</span>] = label.fit_transform(dataset[<span class="string">"Title"</span>])</span><br><span class="line">    dataset[<span class="string">"AgeBin_Code"</span>] = label.fit_transform(dataset[<span class="string">"AgeBin"</span>])</span><br><span class="line">    dataset[<span class="string">"FareBin_Code"</span>] = label.fit_transform(dataset[<span class="string">"FareBin"</span>])</span><br></pre></td></tr></table></figure><br>处理完成后，我们将数据集分割开：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Target = [<span class="string">"Survived"</span>]</span><br><span class="line">train = data[<span class="number">0</span>]</span><br><span class="line">test = data[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">data_x = [<span class="string">"Sex"</span>,<span class="string">"Pclass"</span>,<span class="string">"Embarked"</span>,<span class="string">"Title"</span>,<span class="string">"SibSp"</span>,<span class="string">"Parch"</span>,<span class="string">"Age"</span>,<span class="string">"Fare"</span>,</span><br><span class="line">           <span class="string">"Family"</span>,<span class="string">"IsAlone"</span>]</span><br><span class="line">data_x_calc = [<span class="string">"Sex_Code"</span>,<span class="string">"Pclass"</span>,<span class="string">"Embarked_Code"</span>,<span class="string">"Title_Code"</span>,<span class="string">"SibSp"</span>,<span class="string">"Parch"</span>,</span><br><span class="line">               <span class="string">"Age"</span>,<span class="string">"Fare"</span>]</span><br><span class="line">data_xy = Target + data_x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data_x_bin = [<span class="string">"Sex_Code"</span>,<span class="string">"Pclass"</span>,<span class="string">"Embarked_Code"</span>,<span class="string">"Title_Code"</span>,<span class="string">"FareBin_Code"</span>,</span><br><span class="line">               <span class="string">"AgeBin_Code"</span>,<span class="string">"Family"</span>]</span><br><span class="line">data_xy_bin = Target + data_x_bin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data_dummy = pd.get_dummies(train[data_x])</span><br><span class="line">data_x_dummy = data_dummy.columns.tolist()</span><br><span class="line">data_xy_dummy = Target + data_x_dummy</span><br></pre></td></tr></table></figure><br>之后我们的模型使用离散化后的数据<code>data_x_bin</code>，<code>data_x</code>不再使用。为了便于之后需要，再生成一份独热码的数据<code>data_x_dummy</code>。</p>
+<h3 id="二、变量选择"><a href="#二、变量选择" class="headerlink" title="二、变量选择"></a>二、变量选择</h3><p>我们依旧计算出所有变量的相关系数矩阵，用热力图可视化：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">correlation = data[<span class="number">0</span>].corr()</span><br><span class="line"></span><br><span class="line">_, ax = plt.subplots(figsize = (<span class="number">14</span>,<span class="number">12</span>))</span><br><span class="line">colormap = sns.diverging_palette(<span class="number">220</span>,<span class="number">10</span>,as_cmap = <span class="literal">True</span>)</span><br><span class="line">_ = sns.heatmap(correlation, </span><br><span class="line">            cmap = colormap,</span><br><span class="line">            square = <span class="literal">True</span>,</span><br><span class="line">            cbar_kws = &#123;<span class="string">"shrink"</span>:<span class="number">.9</span>&#125;,</span><br><span class="line">            ax = ax,</span><br><span class="line">            annot = <span class="literal">True</span>,</span><br><span class="line">            linewidths = <span class="number">0.1</span>, vmax = <span class="number">1.0</span>, linecolor = <span class="string">"white"</span>,</span><br><span class="line">            annot_kws = &#123;<span class="string">"fontsize"</span>:<span class="number">12</span>&#125;</span><br><span class="line">)</span><br><span class="line">plt.title(<span class="string">"Correlation Heatmap\ n"</span>)</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://img-blog.csdnimg.cn/20200219175842529.png" alt=""></p>
+<p>我们可以看到，关联程度较大的变量都在<code>data_x</code>中，在之后都不会用到。</p>
+<h3 id="三、模型搭建"><a href="#三、模型搭建" class="headerlink" title="三、模型搭建"></a>三、模型搭建</h3><p>首先我们来划分数据集：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">train_x, val_x, train_y, val_y = model_selection.train_test_split(train[data_x_calc], train[Target], random_state = <span class="number">0</span>)</span><br><span class="line">train_x_bin, val_x_bin, train_y_bin, val_y_bin = model_selection.train_test_split(train[data_x_bin], train[Target] , random_state = <span class="number">0</span>)</span><br><span class="line">train_x_dummy, val_x_dummy, train_y_dummy, val_y_dummy = model_selection.train_test_split(data_dummy[data_x_dummy], train[Target], random_state = <span class="number">0</span>)</span><br></pre></td></tr></table></figure><br>我们来初始化所有的模型，将其放在一个列表中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Machine Learning Algorithm Selection and Initialization</span></span><br><span class="line">MLA = [</span><br><span class="line">    <span class="comment"># Ensemble Methods</span></span><br><span class="line">    ensemble.AdaBoostClassifier(),</span><br><span class="line">    ensemble.BaggingClassifier(),</span><br><span class="line">    ensemble.ExtraTreesClassifier(),</span><br><span class="line">    ensemble.GradientBoostingClassifier(),</span><br><span class="line">    ensemble.RandomForestClassifier(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Gaussian Process</span></span><br><span class="line">    gaussian_process.GaussianProcessClassifier(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#Generalized Linear Model</span></span><br><span class="line">    linear_model.LogisticRegressionCV(),</span><br><span class="line">    linear_model.PassiveAggressiveClassifier(),</span><br><span class="line">    linear_model.RidgeClassifierCV(),</span><br><span class="line">    linear_model.SGDClassifier(),</span><br><span class="line">    linear_model.Perceptron(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Naive Bayes</span></span><br><span class="line">    naive_bayes.BernoulliNB(),</span><br><span class="line">    naive_bayes.GaussianNB(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Nearest Neighbor</span></span><br><span class="line">    neighbors.KNeighborsClassifier(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># SVM</span></span><br><span class="line">    svm.SVC(probability = <span class="literal">True</span>),</span><br><span class="line">    svm.NuSVC(probability = <span class="literal">True</span>),</span><br><span class="line">    svm.LinearSVC(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Trees</span></span><br><span class="line">    tree.DecisionTreeClassifier(),</span><br><span class="line">    tree.ExtraTreeClassifier(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Discriminant Classifier</span></span><br><span class="line">    discriminant_analysis.LinearDiscriminantAnalysis(),</span><br><span class="line">    discriminant_analysis.QuadraticDiscriminantAnalysis(),</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#XGBoost</span></span><br><span class="line">    XGBClassifier()</span><br><span class="line">]</span><br></pre></td></tr></table></figure><br>生成下面要用的交叉验证的数据划分（在下面会详细介绍），并生成一个Pandas的DataFrame来储存各个模型在训练集上的效果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cv_split = model_selection.ShuffleSplit(n_splits = <span class="number">10</span>, test_size = <span class="number">0.3</span>, </span><br><span class="line">                                        train_size = <span class="number">0.6</span>, random_state = <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Dataframe to store the metrics</span></span><br><span class="line">MLA_columns = [<span class="string">"MLA Name"</span>,<span class="string">"MLA Parameters"</span>,</span><br><span class="line">               <span class="string">"MLA Test Accuracy Mean"</span>,<span class="string">"MLA Test Accuracy 3*STD"</span>,<span class="string">"MLA Time"</span>]</span><br><span class="line">MLA_compare = pd.DataFrame(columns = MLA_columns,index=range(<span class="number">0</span>,len(MLA)))</span><br><span class="line">MLA_predict = train[Target]</span><br></pre></td></tr></table></figure><br>下面让所有模型在训练集上用交叉验证拟合一遍，来查看所有模型的表现：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">row_index = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> alg <span class="keyword">in</span> MLA:</span><br><span class="line">    </span><br><span class="line">    MLA_name = alg.__class__.__name__</span><br><span class="line">    MLA_compare.loc[row_index, <span class="string">"MLA Name"</span>] = MLA_name</span><br><span class="line">    MLA_compare.loc[row_index, <span class="string">"MLA Parameters"</span>] = str(alg.get_params())</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Cross Validation</span></span><br><span class="line">    cv_results = model_selection.cross_validate(alg, train[data_x_bin], train[Target], cv  = cv_split)</span><br><span class="line"></span><br><span class="line">    MLA_compare.loc[row_index, <span class="string">'MLA Time'</span>] = cv_results[<span class="string">'fit_time'</span>].mean()</span><br><span class="line">    MLA_compare.loc[row_index, <span class="string">'MLA Test Accuracy Mean'</span>] = cv_results[<span class="string">'test_score'</span>].mean()   </span><br><span class="line">   </span><br><span class="line">    MLA_compare.loc[row_index, <span class="string">'MLA Test Accuracy 3*STD'</span>] = cv_results[<span class="string">'test_score'</span>].std()*<span class="number">3</span></span><br><span class="line">    </span><br><span class="line">    alg.fit(train[data_x_bin],train[Target])</span><br><span class="line">    MLA_predict[MLA_name] = alg.predict(train[data_x_bin])</span><br><span class="line">    </span><br><span class="line">    row_index += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">MLA_compare = MLA_compare.sort_values(by = [<span class="string">'MLA Test Accuracy Mean'</span>], ascending = <span class="literal">False</span>, inplace = <span class="literal">False</span>)</span><br><span class="line">MLA_compare</span><br></pre></td></tr></table></figure><br>这样我们可以得到各个模型训练集上的效果：<br><img src="https://img-blog.csdnimg.cn/20200219180840576.png" alt="在这里插入图片描述"><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(x = <span class="string">"MLA Test Accuracy Mean"</span>, y = <span class="string">"MLA Name"</span>, data=MLA_compare, color=<span class="string">"m"</span>)</span><br><span class="line"></span><br><span class="line">plt.title(<span class="string">"Machine Learning Algorithm Accuracy Score \n"</span>)</span><br><span class="line">plt.xlabel(<span class="string">"Accuracy Score (%)"</span>)</span><br><span class="line">plt.ylabel(<span class="string">"Algorithm"</span>)</span><br></pre></td></tr></table></figure><br><img src="https://img-blog.csdnimg.cn/20200219180929156.png" alt="在这里插入图片描述"><br>在上面的源代码中，你可以看到，为了评测每个模型的表现，我们需要先让它们预测，再使用其预测结果和真实结果进行比对，计算正确率。因此我们选用的数据集是<code>train</code>而不是<code>test</code>，因为<code>test</code>我们根本不知道预测结果。而在使用<code>train</code>数据集的时候，我们又要将<code>train</code>划分为训练集和测试集，这一部分测试集，也就是训练数据划分出的测试集，我们一般要做验证集(Validation data)，这也是验证的作用。</p>
+<p>为什么需要验证呢？无论我们最终的目标是拟合还是分类，都有许多种模型，而哪一种模型才是最适合这个数据集的呢，我们就需要用训练集训练这些模型，再使用验证集找出来表现最好的模型。找到了最好的模型还不够，因为大部分模型都有超参数来影响分类，例如随机森林子树的数量，或是KNN中k的大小，我们要对超参数设不同的值，再进行重复验证，找出最好的一组超参数，从而达到最优的效果（这也是稍后我们要做的）。找到了最优的模型，我们再用这个训练集来训练模型，这样就是我们最终得模型。在这个分类任务中，我们使用投票（稍后介绍），因此所有的模型都可以派上用场，这里只是简单查看一下模型的表现。</p>
+<p>那么交叉验证(Cross Validation)是什么呢？验证集是我们把训练数据划分为两部分，而交叉验证是我们把训练数据等分为N份 (N一般为5或10)，并重复训练N次，每次将第$i$份作为验证集 ($i = 1,2,\cdots,N$)，将其余N-1份作为训练集，最后将N个损失函数的值和准确率求平均，即交叉验证后模型的表现。这样大费周折有什么好处呢？首先交叉验证可以增强我们数据的稳定性，如果验证集和训练集的差异比较大，那模型最后的表现可能比较差；交叉验证使得我们的loss和准确率是整个数据集上的平均值，使得模型的表现不会因为验证集被随机分配到的几个离群点影响。其次是，我们的训练集和验证集都变多了，原来的验证集可能只有20%，现在是整个数据集。</p>
+<p>现在，你也许能够理解上面我做了什么，首先我规定了数据划分的方式(cv_split变量)，其次我对每个模型都进行交叉验证来评测它们的表现，并最后把结果可视化。</p>
+<p>下面我们来创建我们的投票集合，什么是投票呢？投票 (Voting)是一种把多个模型的预测结果统一的过程，对于分类问题来说，即对于一条数据，统计所有分类器的预测值，把频率出现最多的预测结果当作该条数据的预测值，比较像“少数服从多数”的效果。而投票又分类硬投票和软投票，硬投票就像上文说的统计各个分类器的结果；而软分类是在分类器计算每个类别的概率后（分类实际上计算的是各类的概率），并对每一类的概率求和，最后可以得到各类的概率和，选取概率和最高的那一类。在Python中，我们的投票器是一个列表，其中由多个元组组成，元组中是分类器的名字与对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">vote_est = [</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Ensemble Methods</span></span><br><span class="line">    (<span class="string">"ada"</span>, ensemble.AdaBoostClassifier()),</span><br><span class="line">    (<span class="string">"bc"</span>, ensemble.BaggingClassifier()),</span><br><span class="line">    (<span class="string">"etc"</span>, ensemble.ExtraTreesClassifier()),</span><br><span class="line">    (<span class="string">"gbc"</span>, ensemble.GradientBoostingClassifier()),</span><br><span class="line">    (<span class="string">"rfc"</span>, ensemble.RandomForestClassifier()),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Gaussian Processes</span></span><br><span class="line">    (<span class="string">"gpc"</span>, gaussian_process.GaussianProcessClassifier()),</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#GLM</span></span><br><span class="line">    (<span class="string">"lr"</span>,linear_model.LogisticRegressionCV()),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Navies Bayes</span></span><br><span class="line">    (<span class="string">"bnb"</span>, naive_bayes.BernoulliNB()),</span><br><span class="line">    (<span class="string">"gnb"</span>, naive_bayes.GaussianNB()),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Nearest Neighbor</span></span><br><span class="line">    (<span class="string">"knn"</span>, neighbors.KNeighborsClassifier()),</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># SVM</span></span><br><span class="line">    (<span class="string">"svc"</span>,svm.SVC(probability=<span class="literal">True</span>)),</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#xgboost</span></span><br><span class="line">    (<span class="string">"xgb"</span>,XGBClassifier())</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>我们来看看硬软分类之后的效果，同样，我们也使用交叉验证：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hard Vote</span></span><br><span class="line">vote_hard = ensemble.VotingClassifier(estimators = vote_est, voting = <span class="string">"hard"</span>)</span><br><span class="line">vote_hard_cv = model_selection.cross_validate(vote_hard, train[data_x_bin], train[Target],cv = cv_split)</span><br><span class="line">vote_hard.fit(train[data_x_bin],train[Target])</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Hard Voting Test w/bin score mean: &#123;:.2f&#125;"</span>. format(vote_hard_cv[<span class="string">'test_score'</span>].mean()*<span class="number">100</span>))</span><br><span class="line">print(<span class="string">"Hard Voting Test w/bin score 3*std: +/- &#123;:.2f&#125;"</span>. format(vote_hard_cv[<span class="string">'test_score'</span>].std()*<span class="number">100</span>*<span class="number">3</span>))</span><br></pre></td></tr></table></figure><br><img src="https://img-blog.csdnimg.cn/20200219194828999.png" alt=""><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Soft Vote</span></span><br><span class="line">vote_soft = ensemble.VotingClassifier(estimators = vote_est , voting = <span class="string">'soft'</span>)</span><br><span class="line">vote_soft_cv = model_selection.cross_validate(vote_soft, train[data_x_bin], train[Target], cv  = cv_split)</span><br><span class="line">vote_soft.fit(train[data_x_bin], train[Target])</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Soft Voting Test w/bin score mean: &#123;:.2f&#125;"</span>. format(vote_soft_cv[<span class="string">'test_score'</span>].mean()*<span class="number">100</span>))</span><br><span class="line">print(<span class="string">"Soft Voting Test w/bin score 3*std: +/- &#123;:.2f&#125;"</span>. format(vote_soft_cv[<span class="string">'test_score'</span>].std()*<span class="number">100</span>*<span class="number">3</span>))</span><br></pre></td></tr></table></figure><br><img src="https://img-blog.csdnimg.cn/20200219194914465.png" alt=""></p>
+<h3 id="四、模型优化"><a href="#四、模型优化" class="headerlink" title="四、模型优化"></a>四、模型优化</h3><p>你可以看到，我们在建立分类器对象的时候使用的全部是分类器的默认参数，现在我们来调整分类器的超参数，来取得分类器最好的效果。我们首先创建每个超参数要测试的数组，并依次把对应的超参数按照顺序对应好依次的模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hyperparameter</span></span><br><span class="line">grid_n_estimator = [<span class="number">10</span>, <span class="number">50</span>, <span class="number">100</span>, <span class="number">300</span>]</span><br><span class="line">grid_ratio = [<span class="number">.1</span>, <span class="number">.25</span>, <span class="number">.5</span>, <span class="number">.75</span>, <span class="number">1.0</span>]</span><br><span class="line">grid_learn = [<span class="number">.01</span>, <span class="number">.03</span>, <span class="number">.05</span>, <span class="number">.1</span>, <span class="number">.25</span>]</span><br><span class="line">grid_max_depth = [<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="literal">None</span>]</span><br><span class="line">grid_min_samples = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">.03</span>, <span class="number">.05</span>, <span class="number">.10</span>]</span><br><span class="line">grid_criterion = [<span class="string">'gini'</span>, <span class="string">'entropy'</span>]</span><br><span class="line">grid_bool = [<span class="literal">True</span>, <span class="literal">False</span>]</span><br><span class="line">grid_seed = [<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">grid_param = [</span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="string">'n_estimators'</span>: grid_n_estimator, <span class="comment">#default=50</span></span><br><span class="line">            <span class="string">'learning_rate'</span>: grid_learn, <span class="comment">#default=1</span></span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">            &#125;],</span><br><span class="line">       </span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">           </span><br><span class="line">            <span class="string">'n_estimators'</span>: grid_n_estimator, <span class="comment">#default=10</span></span><br><span class="line">            <span class="string">'max_samples'</span>: grid_ratio, <span class="comment">#default=1.0</span></span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#ExtraTreesClassifier </span></span><br><span class="line">            <span class="string">'n_estimators'</span>: grid_n_estimator, <span class="comment">#default=10</span></span><br><span class="line">            <span class="string">'criterion'</span>: grid_criterion, <span class="comment">#default=”gini”</span></span><br><span class="line">            <span class="string">'max_depth'</span>: grid_max_depth, <span class="comment">#default=None</span></span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#GradientBoostingClassifier </span></span><br><span class="line">            <span class="string">'learning_rate'</span>: [<span class="number">.05</span>], </span><br><span class="line">            <span class="string">'n_estimators'</span>: [<span class="number">300</span>], </span><br><span class="line">            <span class="string">'max_depth'</span>: grid_max_depth,</span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#RandomForestClassifier </span></span><br><span class="line">            <span class="string">'n_estimators'</span>: grid_n_estimator, <span class="comment">#default=10</span></span><br><span class="line">            <span class="string">'criterion'</span>: grid_criterion, <span class="comment">#default=”gini”</span></span><br><span class="line">            <span class="string">'max_depth'</span>: grid_max_depth, <span class="comment">#default=None</span></span><br><span class="line">            <span class="string">'oob_score'</span>: [<span class="literal">True</span>], </span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line">    </span><br><span class="line">            [&#123;    </span><br><span class="line">            <span class="comment">#GaussianProcessClassifier</span></span><br><span class="line">            <span class="string">'max_iter_predict'</span>: grid_n_estimator, <span class="comment">#default: 100</span></span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">            &#125;],</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#LogisticRegressionCV </span></span><br><span class="line">            <span class="string">'fit_intercept'</span>: grid_bool, <span class="comment">#default: True</span></span><br><span class="line">            <span class="comment">#'penalty': ['l1','l2'],</span></span><br><span class="line">            <span class="string">'solver'</span>: [<span class="string">'newton-cg'</span>, <span class="string">'lbfgs'</span>, <span class="string">'liblinear'</span>, <span class="string">'sag'</span>, <span class="string">'saga'</span>], <span class="comment">#default: lbfgs</span></span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#BernoulliNB </span></span><br><span class="line">            <span class="string">'alpha'</span>: grid_ratio, <span class="comment">#default: 1.0</span></span><br><span class="line">             &#125;],</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">            <span class="comment">#GaussianNB </span></span><br><span class="line">            [&#123;&#125;],</span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#KNeighborsClassifier </span></span><br><span class="line">            <span class="string">'n_neighbors'</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>], <span class="comment">#default: 5</span></span><br><span class="line">            <span class="string">'weights'</span>: [<span class="string">'uniform'</span>, <span class="string">'distance'</span>], <span class="comment">#default = ‘uniform’</span></span><br><span class="line">            <span class="string">'algorithm'</span>: [<span class="string">'auto'</span>, <span class="string">'ball_tree'</span>, <span class="string">'kd_tree'</span>, <span class="string">'brute'</span>]</span><br><span class="line">            &#125;],</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#SVC </span></span><br><span class="line">            <span class="string">'C'</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], <span class="comment">#default=1.0</span></span><br><span class="line">            <span class="string">'gamma'</span>: grid_ratio, <span class="comment">#edfault: auto</span></span><br><span class="line">            <span class="string">'decision_function_shape'</span>: [<span class="string">'ovo'</span>, <span class="string">'ovr'</span>], <span class="comment">#default:ovr</span></span><br><span class="line">            <span class="string">'probability'</span>: [<span class="literal">True</span>],</span><br><span class="line">            <span class="string">'random_state'</span>: grid_seed</span><br><span class="line">             &#125;],</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">            [&#123;</span><br><span class="line">            <span class="comment">#XGBClassifier</span></span><br><span class="line">            <span class="string">'learning_rate'</span>: grid_learn, <span class="comment">#default: .3</span></span><br><span class="line">            <span class="string">'max_depth'</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>], <span class="comment">#default 2</span></span><br><span class="line">            <span class="string">'n_estimators'</span>: grid_n_estimator, </span><br><span class="line">            <span class="string">'seed'</span>: grid_seed  </span><br><span class="line">             &#125;]   </span><br><span class="line">        ]</span><br></pre></td></tr></table></figure>
+<p>下面开始优化的过程，因为我们按照顺序排列好了参数，直接使用Python内置的<code>zip</code>参数就可以让模型和参数两两对应，再使用for循环即可对每个参数进行操作：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">start_total = time.perf_counter()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> clf, param <span class="keyword">in</span> zip (vote_est, grid_param):</span><br><span class="line">    </span><br><span class="line">    start = time.perf_counter()        </span><br><span class="line">    best_search = model_selection.GridSearchCV(estimator = clf[<span class="number">1</span>], param_grid = param, cv = cv_split, scoring = <span class="string">'roc_auc'</span>)</span><br><span class="line">    best_search.fit(train[data_x_bin], train[Target])</span><br><span class="line">    run = time.perf_counter() - start</span><br><span class="line"></span><br><span class="line">    best_param = best_search.best_params_</span><br><span class="line">    print(<span class="string">'The best parameter for &#123;&#125; is &#123;&#125; with a runtime of &#123;:.2f&#125; seconds.'</span>.format(clf[<span class="number">1</span>].__class__.__name__, best_param, run))</span><br><span class="line">    clf[<span class="number">1</span>].set_params(**best_param) </span><br><span class="line">    </span><br><span class="line">run_total = time.perf_counter() - start_total</span><br><span class="line">print(<span class="string">'Total optimization time was &#123;:.2f&#125; minutes.'</span>.format(run_total/<span class="number">60</span>))</span><br></pre></td></tr></table></figure><br><img src="https://img-blog.csdnimg.cn/20200219200003805.png" alt="在这里插入图片描述"><br>我们来看看优化后的投票结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Hard Vote or weighted probabilities w/Tuned Hyperparameters</span></span><br><span class="line">grid_hard = ensemble.VotingClassifier(estimators = vote_est , voting = <span class="string">'hard'</span>)</span><br><span class="line">grid_hard_cv = model_selection.cross_validate(grid_hard, train[data_x_bin], train[Target], cv  = cv_split)</span><br><span class="line">grid_hard.fit(train[data_x_bin], train[Target])</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Hard Voting w/Tuned Hyperparameters Test w/bin score mean: &#123;:.2f&#125;"</span>. format(grid_hard_cv[<span class="string">'test_score'</span>].mean()*<span class="number">100</span>))</span><br><span class="line">print(<span class="string">"Hard Voting w/Tuned Hyperparameters Test w/bin score 3*std: +/- &#123;:.2f&#125;"</span>. format(grid_hard_cv[<span class="string">'test_score'</span>].std()*<span class="number">100</span>*<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#Soft Vote or weighted probabilities w/Tuned Hyperparameters</span></span><br><span class="line">grid_soft = ensemble.VotingClassifier(estimators = vote_est , voting = <span class="string">'soft'</span>)</span><br><span class="line">grid_soft_cv = model_selection.cross_validate(grid_soft, train[data_x_bin], train[Target], cv  = cv_split)</span><br><span class="line">grid_soft.fit(train[data_x_bin], train[Target])</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Soft Voting w/Tuned Hyperparameters Test w/bin score mean: &#123;:.2f&#125;"</span>. format(grid_soft_cv[<span class="string">'test_score'</span>].mean()*<span class="number">100</span>))</span><br><span class="line">print(<span class="string">"Soft Voting w/Tuned Hyperparameters Test w/bin score 3*std: +/- &#123;:.2f&#125;"</span>. format(grid_soft_cv[<span class="string">'test_score'</span>].std()*<span class="number">100</span>*<span class="number">3</span>))</span><br></pre></td></tr></table></figure><br><img src="https://img-blog.csdnimg.cn/20200219200113476.png" alt="在这里插入图片描述"><br>最后使用我们的投票模型预测并保存结果即可：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">result = pd.DataFrame(columns=[<span class="string">"PassengerId"</span>,<span class="string">"Survived"</span>])</span><br><span class="line">result[<span class="string">'Survived'</span>] = grid_hard.predict(test[data_x_bin])</span><br><span class="line">result[<span class="string">"PassengerId"</span>] = test_backup[<span class="string">"PassengerId"</span>]</span><br><span class="line">result.to_csv(<span class="string">"result.csv"</span>, index=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure><br>最终我们的预测结果获得了78.94%的准确率。<br><img src="https://img-blog.csdnimg.cn/20200219200349950.png" alt="在这里插入图片描述"></p>
+<p>源代码：<a href="https://github.com/Dai98/Kaggle-Competitions/tree/master/Titanic%20Survival" target="_blank" rel="noopener">Github</a></p>
+<h3 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h3><p>[1]. <a href="https://www.kaggle.com/ldfreeman3/a-data-science-framework-to-achieve-99-accuracy" target="_blank" rel="noopener">A Data Science Framework: To Achieve 99% Accuracy</a><br>[2]. <a href="https://blog.csdn.net/weixin_43637773/article/details/88246125" target="_blank" rel="noopener">Python进行泰坦尼克生存预测</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>DanielRX
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%E4%B8%8B" title="Kaggle实战：泰坦尼克幸存者预测 -下">http://yoursite.com/Kaggle实战/Kaggle实战：泰坦尼克幸存者预测 -下</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%20%E4%B8%8A" rel="prev" title="Kaggle实战：泰坦尼克幸存者预测 - 上">
+      <i class="fa fa-chevron-left"></i> Kaggle实战：泰坦尼克幸存者预测 - 上
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、数据预处理"><span class="nav-number">1.</span> <span class="nav-text">一、数据预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、变量选择"><span class="nav-number">2.</span> <span class="nav-text">二、变量选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、模型搭建"><span class="nav-number">3.</span> <span class="nav-text">三、模型搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、模型优化"><span class="nav-number">4.</span> <span class="nav-text">四、模型优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、参考资料"><span class="nav-number">5.</span> <span class="nav-text">四、参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DanielRX</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dai98" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dai98" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Kayaobi" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;Kayaobi" rel="noopener" target="_blank"><i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DanielRX</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">38k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">35 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.7' zIndex='-1' count='199' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+  
+
+</body>
+</html>

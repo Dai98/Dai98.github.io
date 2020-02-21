@@ -48,19 +48,19 @@
   };
 </script>
 
-  <meta name="description" content="这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰">
+  <meta name="description" content="异或是离散数学中逻辑运算的一种二元计算，符号为⊕，当符号前后的两者分别为F和T时，结果才为T，若两者都是F，或两者都是T，则运算结果为F。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为什么样本方差要除以n-1">
-<meta property="og:url" content="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+<meta property="og:title" content="怎样理解异或">
+<meta property="og:url" content="http://yoursite.com/%E7%AE%97%E6%B3%95/%E6%80%8E%E6%A0%B7%E7%90%86%E8%A7%A3%E5%BC%82%E6%88%96">
 <meta property="og:site_name" content="Daniel的博客">
-<meta property="og:description" content="这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰">
+<meta property="og:description" content="异或是离散数学中逻辑运算的一种二元计算，符号为⊕，当符号前后的两者分别为F和T时，结果才为T，若两者都是F，或两者都是T，则运算结果为F。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-09-12T03:31:21.000Z">
-<meta property="article:modified_time" content="2020-02-21T12:36:26.796Z">
+<meta property="article:published_time" content="2020-01-09T02:19:50.000Z">
+<meta property="article:modified_time" content="2020-02-21T12:14:25.676Z">
 <meta property="article:author" content="DanielRX">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+<link rel="canonical" href="http://yoursite.com/%E7%AE%97%E6%B3%95/%E6%80%8E%E6%A0%B7%E7%90%86%E8%A7%A3%E5%BC%82%E6%88%96">
 
 
 <script id="page-configurations">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>为什么样本方差要除以n-1 | Daniel的博客</title>
+  <title>怎样理解异或 | Daniel的博客</title>
   
 
 
@@ -185,7 +185,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/%E7%AE%97%E6%B3%95/%E6%80%8E%E6%A0%B7%E7%90%86%E8%A7%A3%E5%BC%82%E6%88%96">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,7 +198,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          为什么样本方差要除以n-1
+          怎样理解异或
         </h1>
 
         <div class="post-meta">
@@ -208,14 +208,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-09-12 11:31:21" itemprop="dateCreated datePublished" datetime="2019-09-12T11:31:21+08:00">2019-09-12</time>
+              <time title="创建时间：2020-01-09 10:19:50" itemprop="dateCreated datePublished" datetime="2020-01-09T10:19:50+08:00">2020-01-09</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-21 20:36:26" itemprop="dateModified" datetime="2020-02-21T20:36:26+08:00">2020-02-21</time>
+                <time title="修改时间：2020-02-21 20:14:25" itemprop="dateModified" datetime="2020-02-21T20:14:25+08:00">2020-02-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,8 +223,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E5%AD%A6/" itemprop="url" rel="index">
-                    <span itemprop="name">数学</span>
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
                   </a>
                 </span>
             </span>
@@ -242,14 +242,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.3k</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -261,40 +261,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这学期在外交换选的大部分是统计学院的课，前几天在课上教授偶然提到了样本方差与样本空间的方差$v(x)=\frac{1}{n}\sum_{i=1}^n (x_i-\bar x)^2$不同，样本方差为$v(x)=\frac{1}{n-1}\sum_{i=1}^n(x_i - \mu)^2$。这一块在以前学数理统计的时候就没太学明白，前两天另一门课又详细讲了简单随机抽样的过程，对我有了很大启发，之前困扰我的问题也解决了。</p>
+        <p>异或是离散数学中逻辑运算的一种二元计算，符号为⊕，当符号前后的两者分别为F和T时，结果才为T，若两者都是F，或两者都是T，则运算结果为F。</p>
 <a id="more"></a>
-<h3 id="一、简单随机抽样"><a href="#一、简单随机抽样" class="headerlink" title="一、简单随机抽样"></a>一、简单随机抽样</h3><p>假设一个样本空间$\Omega=\{1,2,…,9\}$，每次从样本空间中随机抽取一个数X，要计算X小于5的概率，即$P(X&lt;5)$。但如果仔细想一想，当我们抽取了一个X，X应该是一个确认的常数，为什么会有小于5的概率呢？</p>
-<p>这是因为，我们感兴趣的不是选出特定那个数字小于5的概率。随机性来源于我们假定的随机在样本空间中抽取一个数字，并假设每个数字被抽取到的概率相等。这个过程叫做简单随机抽样（Simple Random Sample, SRS）。进一步说，我们感兴趣的是每次随机抽取一个数字，这个数字小于5的概率。</p>
-<p>然而，样本数据并<strong>不能反映</strong>数据的真实情况，因为随机抽样的随机性。例如在我们的例子內，假如我们做9次简单随机抽样，我们并不能保证数字1到9都会出现，这也是为什么，数据的总方差和样本方差是不一样的。</p>
-<h3 id="二、中心极限定理"><a href="#二、中心极限定理" class="headerlink" title="二、中心极限定理"></a>二、中心极限定理</h3><p>然而，由于中心极限定理，假设我们做n次简单随机抽样，当n是一个足够大数字的时候，我们随机抽样样本的均值$\bar x$是服从于正态分布的。</p>
-<p>我们知道，对正态分布重要的参数是变量的均值与方差，即$\bar x$的均值与方差。我们假设样本为$X = \{x_1,x_2,…,x_n\}$，样本均值为$\bar x$，总体均值为$\mu$，样本方差为$S^2$，总体方差为$\sigma^2$，则：</p>
-<script type="math/tex; mode=display">E(\bar x)=E(\frac{1}{n}\sum_{i=1}^n x_i))=\frac{1}{n}\sum_{i=1}^nE(x_i)=\frac{1}{n}\cdot n \cdot E(X)=\mu</script><script type="math/tex; mode=display">D(\bar x)=D(\frac{1}{n}\sum_{i=1}^n x_i)=\frac{1}{n^2}\sum_{i=1}^nD(x_i)=\frac{\sigma^2}{n}</script><p>因此我们可得，简单随机抽样的样本均值$\bar x ～N(\mu,\frac{\sigma^2}{n})$。</p>
-<h3 id="三、无偏估计"><a href="#三、无偏估计" class="headerlink" title="三、无偏估计"></a>三、无偏估计</h3><p>如果我们只取一组随机抽样的均值$\bar x$，那这组均值有很大概率与总均值$\mu$有偏差的，当我们取多次求抽样样本均值，再求均值，$E(\bar x)$就会越来越靠近真实均值$\mu$，这也是中心极限定理的作用所在。如果我们想获得总样本均值的<strong>无偏估计</strong>，就需要多次抽样求平均值来接近真实值。</p>
-<h3 id="四、样本方差"><a href="#四、样本方差" class="headerlink" title="四、样本方差"></a>四、样本方差</h3><p>根据刚才的思路，来计算样本方差：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    E(S^2)  & = E(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2) =  E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)-(\bar x-\mu))^2)\\
-    & = E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)^2-2(x_i-\mu)(\bar x-\mu)+(\bar x-\mu)^2)))\\
-    & = E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)^2-\frac{2}{n}\sum_{i=1}^n(x_i-\mu)(\bar x-\mu)+\frac{1}{n}\sum_{i=1}^n(\bar x-\mu)^2)))\\
-    & \because \frac{1}{n}\sum_{i=1}^n(x_i-\mu) = \frac{1}{n}\sum_{i=1}^nx_i-\mu=\bar x-\mu\\
-    & \therefore E(S^2)=E(\frac{1}{n}\sum_{i=1}^n((x_i-\mu)^2-\sum_{i=1}^n(\bar x-\mu)^2)))\\
-    &=E(\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2)-E(\sum_{i=1}^n(\bar x-\mu)^2)\\
-    &=\sigma^2-E(\sum_{i=1}^n(\bar x-\mu)^2) \le\sigma^2
-\end{aligned}</script><p>从而可得，样本方差的均值是小于总方差的。我们继续化简：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-& E(\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2)-E(\sum_{i=1}^n(\bar x-\mu)^2)\\
-& =D(X)-D(\bar x)\\
-& = \sigma^2 - \frac{1}{n}\sigma^2\\
-& = \frac{n-1}{n}\sigma^2
-\end{aligned}</script><p>所以，$E(S^2)=\frac{n-1}{n}\sigma^2$，如果我们要为样本方差修正，就要为$S^2$乘上$\frac{n}{n-1}$，所以我们可得样本方差为：</p>
-<script type="math/tex; mode=display">
-S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar x)^2</script><p>&emsp;&emsp;这就是为什么样本方差的分母除的是$n-1$，而不是$n$。</p>
-<h3 id="五、参考文献"><a href="#五、参考文献" class="headerlink" title="五、参考文献"></a>五、参考文献</h3><ol>
-<li><a href="https://blog.csdn.net/Hearthougan/article/details/77859173" target="_blank" rel="noopener">彻底理解样本方差为何除以n-1</a></li>
-<li><a href="https://blog.csdn.net/KID_yuan/article/details/84783671" target="_blank" rel="noopener">样本均值的期望等于总体期望，样本方差的期望等于总体方差</a></li>
-<li>UC Berkeley STAT131A讲义</li>
-</ol>
+<h3 id="一、异或"><a href="#一、异或" class="headerlink" title="一、异或"></a>一、异或</h3><p>异或的真值表如下：<br>| V1   | V2   | 结果 |<br>| —— | —— | —— |<br>| F    | F    | F    |<br>| F    | T    | T    |<br>| T    | F    | T    |<br>| T    | T    | F    |</p>
+<p>两个数字也可以做异或操作，首先需要把两个数字转换为二进制，并把每一位的数字两两做如下比较：<br>| V1   | V2   | 结果 |<br>| —— | —— | —— |<br>| 0    | 0    | 0    |<br>| 0    | 1    | 1    |<br>| 1    | 0    | 1    |<br>| 1    | 1    | 0    |<br>例如 3 ⊕ 5：<br>3的二进制为011，5的二进制为101，两者异或的结果，根据上面的表格，是110，也就是6。</p>
+<h3 id="二、如何理解异或"><a href="#二、如何理解异或" class="headerlink" title="二、如何理解异或"></a>二、如何理解异或</h3><p>我们由前面的内容可以得知，异或真正的目的是找不同，即相同的数字作异或为T，不同的数字做异或为F。当异或对二进制数字使用的时候，它表达的是数字每位是否相同；当对十进制或其他进制的数字进行异或计算时，得出的结果代表两个数字相不相同。</p>
+<h3 id="三、异或的应用"><a href="#三、异或的应用" class="headerlink" title="三、异或的应用"></a>三、异或的应用</h3><p>在了解异或的数学背景后，我们来看一下在编程中异或的应用。以Java为例，在Java中，异或操作符为^</p>
+<h5 id="1-数值型变量值交换"><a href="#1-数值型变量值交换" class="headerlink" title="1) 数值型变量值交换"></a>1) 数值型变量值交换</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">5</span>;</span><br><span class="line"><span class="comment">// 交换a和b</span></span><br></pre></td></tr></table></figure>
+<p>最基础的写法是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> c = a;</span><br><span class="line">a = b;</span><br><span class="line">b = c;</span><br></pre></td></tr></table></figure><br>应用异或我们可以写成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = a ^ b;</span><br><span class="line">b = a ^ b;</span><br><span class="line">a = a ^ b;</span><br></pre></td></tr></table></figure>
+<p>我们来分析一下。a的二进制为011， b的二进制为101。<br>| 行数 | a    | b    |<br>| —— | —— | —— |<br>| 1    | 110  | 101  |<br>| 2    | 110  | 011  |<br>| 3    | 101  | 011  |<br>至此，a现在是101，b是011，两者完成交换。既然我们要交换a和b，那么我们只需要交换它们不相同的位置上的数字即可。第一次a与b作异或，找到的是a和b位数不同的地方，并把新的值赋给了a，第二次作异或，a现在的结果是a和b哪些位数相同(0)与哪些位数不同(1)。让a与b做异或，b的每一位如果遇到一样的(0)，如果这一位是1，就会是1，如果这一位原本是0，就还是0；如果遇到不一样的(1)，b的这一位如果是1，就会变成0；如果是0，就会变成1，从而完成了把一样的留存下来，把不一样的去相反的操作，也就是把a的初始值赋给了b。之后做相同的操作，把b的值赋给了a，从而完成了交换操作。</p>
+<h5 id="2-Leetcode-找数组中不重复的数字"><a href="#2-Leetcode-找数组中不重复的数字" class="headerlink" title="2) Leetcode: 找数组中不重复的数字"></a>2) Leetcode: 找数组中不重复的数字</h5><p>假设一个数组中有两两成对的数字，只有一个数字是不成对的，请问是哪一个数字。例如，{1,2,2,3,3}，不重复的数字是1。<br>因为a ^ b = b ^ a，所以异或满足交换律，也就是说，我们对整个数组做异或，可得，1 ^ 2 ^ 2 ^ 3 ^ 3 = 1 ^ (2 ^ 2) ^ (3 ^ 3) = 1 ^ 0 ^ 0 = 1。实现代码如下，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> aim = numarray[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; aim.length; i++)&#123;</span><br><span class="line">    aim ^= numarray[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> aim</span><br></pre></td></tr></table></figure>
+<h5 id="3-Leetcode-找数组中重复的数字"><a href="#3-Leetcode-找数组中重复的数字" class="headerlink" title="3) Leetcode: 找数组中重复的数字"></a>3) Leetcode: 找数组中重复的数字</h5><p>假设一个数组中，只有一个数字重复出现了两次，其余的数字都只出现了一次，请问是哪一个数字。例如，{1,2,2,3}，重复出现的数字为2。<br>设1 ^ 2 ^ … ^ k ^ … ^ 1000 = A, 则1 ^ 2 ^ … ^ k ^ k ^ … ^ 1000 = 1 ^ 2 ^ … ^ k ^ … ^ 1000 ^ k = A ^ k，A ^ A ^ k = 0 ^ k = k。也就是说，我们先把1-1000做异或(记为A)，再把整个数组中的数字依次做异或(记为B)，最后再将A与B做异或，即可找出我们要找的数字。实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> A = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>;i&lt;=<span class="number">1000</span>;i++)&#123;</span><br><span class="line">    A ^= i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> B = numarray[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; B.length; i++)&#123;</span><br><span class="line">    B ^= numarray[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> A ^ B;</span><br></pre></td></tr></table></figure>
+<h3 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h3><p>[1]. <a href="https://www.zhihu.com/question/31116687/answer/964367526" target="_blank" rel="noopener">知乎 - 张英锋：如何理解异或的含义</a><br>[2]. <a href="https://blog.csdn.net/lkpklpk/article/details/81287115" target="_blank" rel="noopener">Java中的异或运算符^</a><br>[3]. <a href="https://blog.csdn.net/wohaqiyi/article/details/80931693" target="_blank" rel="noopener">Java中异或运算的应用</a></p>
 
     </div>
 
@@ -310,7 +291,7 @@ S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/%E6%95%B0%E5%AD%A6/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%E8%A6%81%E9%99%A4%E4%BB%A5n-1" title="为什么样本方差要除以n-1">http://yoursite.com/数学/为什么样本方差要除以n-1</a>
+    <a href="http://yoursite.com/%E7%AE%97%E6%B3%95/%E6%80%8E%E6%A0%B7%E7%90%86%E8%A7%A3%E5%BC%82%E6%88%96" title="怎样理解异或">http://yoursite.com/算法/怎样理解异或</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -326,10 +307,13 @@ S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%9F%A9%E9%98%B5%E7%9A%84QR%E5%88%86%E8%A7%A3%E4%BB%A5%E5%8F%8A%E5%9C%A8%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8" rel="next" title="矩阵的QR分解以及在最小二乘法中的应用">
-      矩阵的QR分解以及在最小二乘法中的应用 <i class="fa fa-chevron-right"></i>
+    <a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%9F%A9%E9%98%B5%E7%9A%84QR%E5%88%86%E8%A7%A3%E4%BB%A5%E5%8F%8A%E5%9C%A8%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8" rel="prev" title="矩阵的QR分解以及在最小二乘法中的应用">
+      <i class="fa fa-chevron-left"></i> 矩阵的QR分解以及在最小二乘法中的应用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0" rel="next" title="交叉熵损失函数">
+      交叉熵损失函数 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -390,7 +374,7 @@ S^2=\frac{n}{n-1}(\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2)=\frac{1}{n-1}\sum_{i=1}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单随机抽样"><span class="nav-number">1.</span> <span class="nav-text">一、简单随机抽样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、中心极限定理"><span class="nav-number">2.</span> <span class="nav-text">二、中心极限定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、无偏估计"><span class="nav-number">3.</span> <span class="nav-text">三、无偏估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、样本方差"><span class="nav-number">4.</span> <span class="nav-text">四、样本方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、参考文献"><span class="nav-number">5.</span> <span class="nav-text">五、参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、异或"><span class="nav-number">1.</span> <span class="nav-text">一、异或</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、如何理解异或"><span class="nav-number">2.</span> <span class="nav-text">二、如何理解异或</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、异或的应用"><span class="nav-number">3.</span> <span class="nav-text">三、异或的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-数值型变量值交换"><span class="nav-number">3.0.1.</span> <span class="nav-text">1) 数值型变量值交换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Leetcode-找数组中不重复的数字"><span class="nav-number">3.0.2.</span> <span class="nav-text">2) Leetcode: 找数组中不重复的数字</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Leetcode-找数组中重复的数字"><span class="nav-number">3.0.3.</span> <span class="nav-text">3) Leetcode: 找数组中重复的数字</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、参考资料"><span class="nav-number">4.</span> <span class="nav-text">四、参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
