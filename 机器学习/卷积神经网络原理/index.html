@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-loading-bar.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="卷积神经网络 (Convolutional Neural Network, CNN)是受生物学上感受野机制的启发而提出的深度学习模型，在图像处理中较为常见，下面我们依次介绍各种层的结构和作用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="卷积神经网络原理">
+<meta property="og:url" content="http://yoursite.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Daniel的博客">
+<meta property="og:description" content="卷积神经网络 (Convolutional Neural Network, CNN)是受生物学上感受野机制的启发而提出的深度学习模型，在图像处理中较为常见，下面我们依次介绍各种层的结构和作用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-01T04:02:36.000Z">
+<meta property="article:modified_time" content="2020-03-01T04:09:41.182Z">
+<meta property="article:author" content="DanielRX">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>卷积神经网络原理 | Daniel的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Daniel的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/Dai98" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DanielRX">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Daniel的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          卷积神经网络原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-01 12:02:36 / 修改时间：12:09:41" itemprop="dateCreated datePublished" datetime="2020-03-01T12:02:36+08:00">2020-03-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>卷积神经网络 (Convolutional Neural Network, CNN)是受生物学上感受野机制的启发而提出的深度学习模型，在图像处理中较为常见，下面我们依次介绍各种层的结构和作用。</p>
+<a id="more"></a>
+<h4 id="一、从图像到矩阵"><a href="#一、从图像到矩阵" class="headerlink" title="一、从图像到矩阵"></a>一、从图像到矩阵</h4><p>每张图片都是由像素组成的，一张图片每行和每列有多少个像素即为图片的分辨率 (Resolution)；每一个像素都有一个颜色，这个颜色是由三个属性组成的，分别为红、绿、蓝，我们把这三个属性叫做通道 (Channel)。当然，这是对于彩色图片来讲，对于黑白照片的而言，每个像素只有灰度一个属性。</p>
+<p>一般来讲，每个通道的值在0到255之间。这样，一张分辨率为100x100的彩色照片就可以转换为一个(100,100,3)的张量；相同大小的黑白照片可以转换为(100,100,1)的张量。</p>
+<h4 id="二、前馈神经网络的缺陷"><a href="#二、前馈神经网络的缺陷" class="headerlink" title="二、前馈神经网络的缺陷"></a>二、前馈神经网络的缺陷</h4><p>MNIST数据集是图像处理领域较为著名的数据集，由50000个0到9的手写数字组成，我们要对图像进行多分类，每张照片为28x28x1的灰度图片。</p>
+<p>假设我们使用两层的前馈神经网络来解决该问题，隐藏层使用15个神经元，那我们需要计算$28\times 28\times 15 + 10 \times 15 + 15+10 = 11,935$个参数，在反向传播的时候需要大量的计算。而我们知道图片分辨率为28x28已经非常小了，如今的照片的分辨率可以达到2000x3000，传统的前馈神经网络无法完成数量如此庞大的参数计算。</p>
+<p>前馈网络的另一个缺陷是无法捕获到图片中的不变特征。一张图片进行放缩或旋转后，其中的特征保持不变，而前馈网络较难捕获到这些不变的特征。</p>
+<p>而卷积神经网络用一种不同的结构，可以较好的解决上面的问题。下面我们来分别介绍一下卷积神经网络的主要部分：卷积层、池化层、全连接层。</p>
+<h4 id="三、数据输入层"><a href="#三、数据输入层" class="headerlink" title="三、数据输入层"></a>三、数据输入层</h4><p>该层要做的处理主要是对原始图像数据进行预处理，其中包括：</p>
+<ol>
+<li>中心化：把输入数据各个维度都减去该维度的平均值，使其中心化为0</li>
+<li>归一化：使数据的标准差为1</li>
+<li>PCA/白化：用PCA降维；白化是对数据各个特征轴上的幅度归一化</li>
+</ol>
+<p>中心化与归一化示例：</p>
+<div align = "center">
+<img src = "https://images2015.cnblogs.com/blog/1093303/201704/1093303-20170430194338194-1949897491.jpg" width = 600>
+</div>
+
+<p>去相关与白化示例：</p>
+<div align = "center">
+<img src = "https://images2015.cnblogs.com/blog/1093303/201704/1093303-20170430194357553-1200745791.jpg" width = 600>
+</div>
+
+<h4 id="四、卷积层"><a href="#四、卷积层" class="headerlink" title="四、卷积层"></a>四、卷积层</h4><h5 id="1-卷积计算"><a href="#1-卷积计算" class="headerlink" title="1. 卷积计算"></a>1. 卷积计算</h5><p>二维的卷积计算在图像处理领域经常能够用到，卷积计算需要一个叫做卷积核 (Convolution Kernel)或者叫滤波器(Filter)的结构，实际上是一个矩阵。假设图片$X\in\R^{M\times N}$，卷积核$w\in\R^{m\times n}$，且一般$m&lt;&lt;M,n&lt;&lt;N$，其卷积为：</p>
+<script type="math/tex; mode=display">
+y_{ij} = \sum_{u=1}^m\sum_{v=1}^n w_{uv}\cdot x_{i-u+1,j-v+1}</script><p>卷积实例如下图：</p>
+<div align = "center">
+<img src = "https://img-blog.csdnimg.cn/20200226184902949.png" width = 550>
+</div>
+
+<p>被卷积核扫描到的区域，依次和卷积核的翻转对应的数字相乘，再把所有结果求和。在该例中，即$1\times (-1) + 1\times 0+ 1\times 0+ (-3)\times 0+ 0\times 0+ 1\times 0+ 1\times 0 - 1\times 0+ 0\times 1=-1$，并把最后的结果$-1$写在了结果对应的位置上。这是一次卷积的计算，而我们的卷积核需要依次扫描整个图片，来得到最后的结果，我们将其称之为特征映射 (Feature Map)，如下图：</p>
+<div align = "center">
+<img src = "https://imgconvert.csdnimg.cn/aHR0cDovLzViMDk4OGU1OTUyMjUuY2RuLnNvaHVjcy5jb20vaW1hZ2VzLzIwMTgwODE3L2FjNjY5ODg5Zjg1NDRlZDhiNzMyZDMwODEzODJiNDlmLmdpZg" width = 350>
+</div>
+
+<p>你或许会注意到，为什么上面计算卷积的时候$1$和$-1$的位置交换了呢？这是因为在二维卷积的计算中，我们要先将卷积核进行翻转180°，再进行卷积运算；而在实际实现的时候，我们用相关性来代替卷积，相关性与卷积的区别只在于相互关在计算之前没有180°翻转卷积核，因此相关性也被称为不翻转卷积，或者干脆和卷积混为一谈。</p>
+<p>在深度学习中，我们使用卷积层的目的是为了特征提取，卷积核是否翻转也不会影响模型的学习能力，特别是，卷积核也是学习的参数的时候，卷积与相互关是等价的。实际上，许多深度学习模型都是用相互关来代替卷积，我们在下文的实现也是使用相互关来代替卷积。</p>
+<h5 id="2-卷积核的种类与超参数"><a href="#2-卷积核的种类与超参数" class="headerlink" title="2. 卷积核的种类与超参数"></a>2. 卷积核的种类与超参数</h5><p>那我们究竟该如何选择卷积核呢？实际上，经验告诉我们有许多种卷积核可供选择，不同种类的卷积核可以完成不同的任务：</p>
+<div align = "center">
+<img src = "https://img-blog.csdn.net/20170305111758443?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveW91eXV5aXhpdQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" width = 550>
+</div>
+
+<p>卷积核还有三个超参数，即步长 (Stride)、零填充 (Zero Padding)与深度 (Depth)。步长是指窗口滑动的间隔，上面的例子都是步长等于1。零填充是在输入向量两端进行补零。深度是卷积核的数量，应该与下一层的神经元数量相同。</p>
+<p>假设卷积层的输入神经元数量为$n$，卷积大小为$m$，步长为$s$，输入神经元两层各补$p$个0，那么卷积层的神经元数量为$\frac{n-m+2p}{s} + 1$。</p>
+<p>一般的有三种常用的卷积：</p>
+<ol>
+<li>窄卷积 (Narrow Convolution): 步长$s=1$，两端不补零$p=0$，卷积后输出长度为$n-m+1$</li>
+<li>宽卷积 (Wide Convolution): 步长$s=1$，两端补零$p=m-1$，卷积后输出长度为$n+m-1$</li>
+<li>等宽卷积 (Equal-Width Convolution): 步长$s=1$，两端补零$p=\frac{m-1}{2}$，卷积后输出长度为$n$</li>
+</ol>
+<h5 id="3-三维卷积核"><a href="#3-三维卷积核" class="headerlink" title="3. 三维卷积核"></a>3. 三维卷积核</h5><div align = "center">
+<img src = "https://img-blog.csdnimg.cn/20200226223934409.png" width = 350>
+</div>
+
+<p>卷积核不止有二维的，也有三维的卷积核，这时候卷积核的参数不知有高度和宽度，还有深度。二维的卷积核的参数为[channel, width, height]，三维的卷积核的参数为[channel, width, height, depth]。</p>
+<div align = "center">
+<img src = "https://pic1.zhimg.com/v2-e2970fa79c51956a53243475af34a42b_r.jpg" width = 800>
+</div>
+
+<p>上面的图可以帮助我们理解。图a是指灰度图片，只有一个通道，卷积核的通道为1，卷积核输出的特征映射的通道为1，这是二维卷积；图b指的是彩色图片，有三个通道 (实际上图(b)显示的是有多个帧的情况，但为了便于理解，在这里我说成是通道，影响并不大)，我们的卷积核的通道为3，因此特征映射的通道还是为1，这也是二维卷积；图c所对应的三位卷积，需要更多的信息，例如在该图中我们输入的是一段视频，卷积核的深度对应的是视频有多少帧 (视频实际上是连续播放的图片，若视频一秒播放$k$张图片，我们称视频一秒有$k$帧)，在图中视频一共有$L$帧，我们的卷积核的深度为$d$帧，且$d&lt;L$，我们可以获得一个三维的特征映射，这便是三维卷积核的输出结果。</p>
+<p>不难发现，三维卷积通常需要更多的数据来支持三维卷积核的运算，对于一般的照片，二维卷积核便足够使用了。</p>
+<h5 id="4-参数共享"><a href="#4-参数共享" class="headerlink" title="4. 参数共享"></a>4. 参数共享</h5><p>我们假设每个卷积核在图片中的权重是固定的，进一步减少参数的数量。假设我们的输入是分辨率为32x32的彩色图片，有三个通道，因此图片的大小为(3,32,32)，并有步长为1，零填充为2，有10个5x5的卷积核，那么我们特征映射的边长为：</p>
+<script type="math/tex; mode=display">\frac{32 + 2 \times 2 - 5}{1} + 1 = 32</script><div align = "center">
+<img src = "https://img-blog.csdnimg.cn/20190419162158894.png" width = 550>
+</div>
+
+<p>若我们不参数共享，那我们需要$10\times 32\times 32\times 5\times 5\times 3 = 768,000$个参数</p>
+<p>若我们进行参数共享，那我们需要$10\times 5\times 5\times 3 = 750$个参数</p>
+<p>可以发现，参数共享使得我们的卷积核只能捕获一个很小的局部特征，如果图像很大的化就会导致特征的丢失，为了解决该问题，我们可以在每个卷积层中设置多个卷积核。</p>
+<h4 id="五、池化层"><a href="#五、池化层" class="headerlink" title="五、池化层"></a>五、池化层</h4><p>池化层(Pooling)，也叫子采样层(Subsampling)，是用来提取特征，以此减少神经元的数量，防止过拟合的出现。虽然卷积层在一定程度上减少了神经元数量，但如果此时我们直接连接全连接层进行分类，还是有很多的参数。池化层的思路也很简单，我们把卷积层得到的特征映射集中的每一个特征映射分成很多块，用某一种方式来计算出一个值，窗口再继续滑动，获取下一个块中的值；在统计学上，我们将其称之为下采样 (Down Sampling)。</p>
+<div align = "center">
+<img src = "https://images2015.cnblogs.com/blog/1093303/201704/1093303-20170430195028600-318072954.jpg" width = 700>
+</div>
+
+<p>如果换做更严谨的数学语言，就是我们通过卷积层获得了特征映射集$X\in R^{M\times N\times D}$，其中每一个特征映射为$X^d$，将其划分为很多区域$R^d_{m,n}$，$1\leq m \leq M’$，$1\leq n \leq N’$，分出的块$R^d$可以重叠，也可以不重叠，取决于窗口的步长。</p>
+<p>对于分出的块$R^d_{m,n}$，我们通过池化函数 (Pooling Function)来获得一个新值，最常用的池化函数有两种，分别为最大池化(Maximum Pooling)与平均池化(Average Pooling)。</p>
+<ol>
+<li>最大池化<br>最大池化是取一个区域内所有神经元的最大值，即<script type="math/tex; mode=display">Y_{m,n}^d=max\ x_i,\ i\in R^d_{m,n}</script>其中$x_i$是$R^d_{m,n}$上每个神经元的激活值。</li>
+<li>平均池化<br>平均池化与最大池化的思路很相似，只不过这次我们获得的值是$R^d_{m,n}$上所有神经元激活值的平均值 ，即<script type="math/tex; mode=display">Y_{m,n}=\frac{1}{|R^d_{m,n}|}\sum_{i\in R_{m,n}^d}x_i</script></li>
+</ol>
+<div align = "center">
+<img src = "https://images2015.cnblogs.com/blog/1093303/201704/1093303-20170430195106397-414671399.jpg" width = 500>
+</div>
+
+<p>上图即是最大池化，我们可以看到，随着2x2的滤波器，且步长为2，我们4x4的矩阵下采样为2x2的矩阵，参数进一步降低了。你可以从图中看到，不同的颜色是特征映射上不同的块，且每个块最终取的为最大值。若为平均池化，我们最终得到的是每个块中元素的值的平均数。</p>
+<h4 id="六、Flatten层与全连接层"><a href="#六、Flatten层与全连接层" class="headerlink" title="六、Flatten层与全连接层"></a>六、Flatten层与全连接层</h4><p>Flatten层的目的是将高维数据压缩为向量，以便之后的全连接层进行分类。Flatten层一般在池化层之后，在全连接层之前，不会影响batch的大小。</p>
+<p>一般全连接层为卷积神经网络的最后一层，与前馈神经网络的层无区别，通过不同的激活函数来进行二分类或是多分类任务。</p>
+<h4 id="七、卷积神经网络的结构"><a href="#七、卷积神经网络的结构" class="headerlink" title="七、卷积神经网络的结构"></a>七、卷积神经网络的结构</h4><div align = "center">
+<img src = "https://img-blog.csdn.net/20170305115303760" width = 700>
+</div>
+
+<p>现在我们就可以将上面介绍的层拼装起来，组成一个卷积神经网络。上面的图为1994年解决手写字体分类的模型LeNet5，每个卷积层后都用ReLU激活函数，之后连接池化层，最后经过两个全连接层给出预测。</p>
+<h4 id="八、参考资料"><a href="#八、参考资料" class="headerlink" title="八、参考资料"></a>八、参考资料</h4><p>[1]. <a href="https://blog.csdn.net/Avery123123/article/details/103915578?ops_request_misc=%7B%22request%5Fid%22%3A%22158260071919724848309815%22%2C%22scm%22%3A%2220140713.130056874..%22%7D&amp;request_id=158260071919724848309815&amp;biz_id=0&amp;utm_source=distribute.pc_search_result.none-task" target="_blank" rel="noopener">第五章 卷积神经网络</a><br>[2]. <a href="https://blog.csdn.net/Rainbow0210/article/details/78562926" target="_blank" rel="noopener">深度理解卷积神经网络</a><br>[3]. <a href="https://blog.csdn.net/sun_xiao_kai/article/details/94876240" target="_blank" rel="noopener">卷积神经网络和TextCNN</a><br>[4]. <a href="https://github.com/ShusenTang/Dive-into-DL-PyTorch" target="_blank" rel="noopener">《动手学深度学习》</a><br>[5]. <a href="https://blog.csdn.net/youyuyixiu/article/details/60465126" target="_blank" rel="noopener">卷积神经网络的直观解释</a><br>[6]. <a href="https://blog.csdn.net/m0_37673307/article/details/81166266" target="_blank" rel="noopener">卷积神经网络CNN原理详解</a><br>[7]. <a href="https://zhuanlan.zhihu.com/p/29119239" target="_blank" rel="noopener">知乎：CNN中卷积层的计算细节</a><br>[8]. <a href="https://www.jianshu.com/p/6e1ef63615f8" target="_blank" rel="noopener">卷积、卷积核的维数、尺寸</a><br>[9]. <a href="https://blog.csdn.net/trista2hong/article/details/88649995" target="_blank" rel="noopener">CNN两大神器：局部感知、参数共享</a><br>[10]. <a href="https://www.cnblogs.com/bonelee/p/8242061.html" target="_blank" rel="noopener">CNN中的局部连接与权值共享</a><br>[11]. <a href="https://blog.csdn.net/u011240016/article/details/78475043" target="_blank" rel="noopener">CNN中的权值共享理解</a><br>[12]. <a href="https://www.zhihu.com/question/266352189?sort=created" target="_blank" rel="noopener">知乎 - 卷积神经网络中二维卷积核与三维卷积核有什么区别？</a><br>[13]. <a href="https://www.cnblogs.com/skyfsm/p/6790245.html" target="_blank" rel="noopener">卷积神经网络CNN总结</a><br>[14]. <a href="https://blog.csdn.net/qq_35290785/article/details/89402999" target="_blank" rel="noopener">卷积参数共享机制</a><br>[15]. <a href="https://blog.csdn.net/ture_dream/article/details/53240985" target="_blank" rel="noopener">一张图理解卷积神经网络卷积层和感受野</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>DanielRX
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86/" title="卷积神经网络原理">http://yoursite.com/机器学习/卷积神经网络原理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Kaggle%E5%AE%9E%E6%88%98/Kaggle%E5%AE%9E%E6%88%98%EF%BC%9A%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%B9%B8%E5%AD%98%E8%80%85%E9%A2%84%E6%B5%8B%20-%E4%B8%8B/" rel="prev" title="Kaggle实战：泰坦尼克幸存者预测 -下">
+      <i class="fa fa-chevron-left"></i> Kaggle实战：泰坦尼克幸存者预测 -下
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、从图像到矩阵"><span class="nav-number">1.</span> <span class="nav-text">一、从图像到矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、前馈神经网络的缺陷"><span class="nav-number">2.</span> <span class="nav-text">二、前馈神经网络的缺陷</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、数据输入层"><span class="nav-number">3.</span> <span class="nav-text">三、数据输入层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、卷积层"><span class="nav-number">4.</span> <span class="nav-text">四、卷积层</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-卷积计算"><span class="nav-number">4.1.</span> <span class="nav-text">1. 卷积计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-卷积核的种类与超参数"><span class="nav-number">4.2.</span> <span class="nav-text">2. 卷积核的种类与超参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-三维卷积核"><span class="nav-number">4.3.</span> <span class="nav-text">3. 三维卷积核</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-参数共享"><span class="nav-number">4.4.</span> <span class="nav-text">4. 参数共享</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、池化层"><span class="nav-number">5.</span> <span class="nav-text">五、池化层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、Flatten层与全连接层"><span class="nav-number">6.</span> <span class="nav-text">六、Flatten层与全连接层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七、卷积神经网络的结构"><span class="nav-number">7.</span> <span class="nav-text">七、卷积神经网络的结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#八、参考资料"><span class="nav-number">8.</span> <span class="nav-text">八、参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DanielRX</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dai98" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dai98" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Kayaobi" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;Kayaobi" rel="noopener" target="_blank"><i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DanielRX</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">42k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">39 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.7' zIndex='-1' count='199' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+  
+
+</body>
+</html>
